@@ -34,6 +34,7 @@ public class LabManager {
             List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, dbName, labResultId, labTests);
 
             if (!labResults.isEmpty()) {
+                //The LabResultFactory has returned 18 lab results
                 for (LabResult labResult : labResults) {
                     if (labResult != null) {
                         Person person = getPerson(labResult.getVisit().getPatientId(), symmetricKey, dbName, enc_password);

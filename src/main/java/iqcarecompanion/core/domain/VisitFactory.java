@@ -3,8 +3,7 @@ package iqcarecompanion.core.domain;
 
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.utils.DBConnector;
-import iqcarecompanion.core.utils.ResourceManager;
-import java.io.IOException;
+import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,6 +59,7 @@ public class VisitFactory {
         PreparedStatement preparedStatement = null;
         ResultSet rs;
         int final_visit_id = 0;
+        final String LAST_VISIT_ID_RECORDED = "last_visit_id";//the key in the properties file
         
         String sql = "SELECT top " + limit + " Visit_Id,Ptn_Pk,VisitDate FROM " + dbName;
         sql += ".dbo.ord_Visit as visits WHERE ";
@@ -90,18 +90,10 @@ public class VisitFactory {
             }
 
         }
-        updateVisitId(final_visit_id);
+        updateLastId(final_visit_id, LAST_VISIT_ID_RECORDED);
 
         return visits;
     }
     
-    private static void updateVisitId(int finalVisitId){
-        if (finalVisitId != 0) {
-            try {
-                ResourceManager.modifyConfigFile("last_visit_id", Integer.toString(finalVisitId), "runtime.properties");
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, ex.toString(), ex);
-            }
-        }
-    }
+    
 }

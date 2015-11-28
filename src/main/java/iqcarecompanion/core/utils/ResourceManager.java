@@ -22,28 +22,11 @@ import org.kemricdc.constants.PropertiesManager;
 
 /**
  *
- * @author Teddy
+ * @author Teddy Odhiambo
  */
 public class ResourceManager extends PropertiesManager {
 
     final static Logger logger = Logger.getLogger(ResourceManager.class.getName());
-
-    public static synchronized ArrayList<String> readKeys(String prop_file) throws IOException {
-        Properties prop = new Properties();
-        ArrayList<String> keyList = new ArrayList<>();
-
-        try (FileInputStream input = new FileInputStream(confPath + prop_file)) {
-            prop.load(input);
-        }
-
-        Enumeration en = prop.keys();
-
-        while (en.hasMoreElements()) {
-            keyList.add((String) en.nextElement());
-        }
-
-        return keyList;
-    }
 
     public static List<Event> readJSONFile(String jsonFile) {
         List<Event> events = new ArrayList<>();
@@ -56,6 +39,17 @@ public class ResourceManager extends PropertiesManager {
             logger.log(Level.SEVERE, ex.toString(), ex);
         }
         return events;
+    }
+    
+    public static void updateLastId(int finalId, String key){
+        if (finalId != 0) {
+            try {
+                ResourceManager.modifyConfigFile(key, Integer.toString(finalId), "runtime.properties");
+                logger.log(Level.INFO, "{0} successfully updated to {1} in runtime.properties", new Object[]{key, finalId});
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, ex.toString(), ex);
+            }
+        }
     }
 
 }

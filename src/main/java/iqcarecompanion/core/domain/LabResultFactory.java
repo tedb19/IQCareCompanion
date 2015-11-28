@@ -7,6 +7,7 @@ import iqcarecompanion.core.entities.LabTest;
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.utils.DBConnector;
 import iqcarecompanion.core.utils.ResourceManager;
+import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,6 +35,7 @@ public class LabResultFactory {
         ResultSet rs;
         ResultSet orderRs;
         int visitId = 0;
+        final String LAST_LAB_ID_RECORDED = "labResultId";
 
         String[] splitLabtest = StringUtils.split(labTests, ",");
         int totalLabTests = splitLabtest.length;
@@ -120,18 +122,9 @@ public class LabResultFactory {
 
         }
 
-        updateLabResultId(final_lab_id);
+        updateLastId(final_lab_id, LAST_LAB_ID_RECORDED);
 
         return labResults;
     }
 
-    private static void updateLabResultId(int finalLabId) {
-        if (finalLabId != 0) {
-            try {
-                ResourceManager.modifyConfigFile("labResultId", Integer.toString(finalLabId), "runtime.properties");
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, ex.toString(), ex);
-            }
-        }
-    }
 }
