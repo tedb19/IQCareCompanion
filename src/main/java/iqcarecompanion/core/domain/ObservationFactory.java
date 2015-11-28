@@ -6,7 +6,7 @@ import iqcarecompanion.core.entities.Observation;
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.jsonMapper.Event;
 import iqcarecompanion.core.utils.DBConnector;
-import iqcarecompanion.core.utils.ParseDateAndName;
+import iqcarecompanion.core.utils.DateUtil;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -57,7 +57,7 @@ public class ObservationFactory {
             if (rs.isBeforeFirst()) {
                 rs.first();
                 observation = new Observation();
-                observation.setObservationDate(ParseDateAndName.parseDate(visit.getVisitDate()));
+                observation.setObservationDate(DateUtil.parseDate(visit.getVisitDate()));
                 observation.setObservationName(event.eventName);
                 String datatype = event.eventValueDataType;
                 eventDate = rs.getDate(event.eventDateColumn);
@@ -70,7 +70,7 @@ public class ObservationFactory {
                             observationValue = rs.getString(event.eventValueColumn);
                             break;
                         case "DATE":
-                            observationValue = ParseDateAndName.parseDate(rs.getTimestamp(event.eventValueColumn));
+                            observationValue = DateUtil.parseDate(rs.getTimestamp(event.eventValueColumn));
                             break;
                         case "DOUBLE":
                             observationValue = Double.toString(rs.getDouble(event.eventValueColumn));
@@ -113,7 +113,7 @@ public class ObservationFactory {
                 for (String transformation : event.transformations) {
                     if (totalTransformations == 1) {
                         if (observationValue.equals(transformation)) {
-                            observation.setObservationValue(ParseDateAndName.parseDate(eventDate));
+                            observation.setObservationValue(DateUtil.parseDate(eventDate));
                         }
                     } else {
                         splitTransformer = transformation.split(":");
