@@ -3,7 +3,7 @@
     "eventName": "WHO_STAGE",
     "tableName": "dtl_PatientStage",
     "eventValueColumn": "WHOStage",
-    "eventValueDataType": "INT",
+    "eventValueDataType": "INT1",
     "eventDateColumn": "",
     "visitIdColumn": "Visit_Pk",
     "transformations": [

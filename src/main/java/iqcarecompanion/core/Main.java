@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Teddy
+ * @author Teddy Odhiambo
  */
 public class Main {
 
