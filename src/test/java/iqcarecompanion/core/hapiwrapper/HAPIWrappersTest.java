@@ -17,7 +17,7 @@ import org.kemricdc.hapi.oru.OruFiller;
 
 /**
  *
- * @author IQCare
+ * @author Teddy Odhiambo
  */
 public class HAPIWrappersTest {
     private String eventName = "";
