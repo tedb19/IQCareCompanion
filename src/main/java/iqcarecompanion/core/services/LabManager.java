@@ -2,9 +2,9 @@ package iqcarecompanion.core.services;
 
 import static iqcarecompanion.core.domain.LabResultFactory.getLabResults;
 import static iqcarecompanion.core.domain.PersonFactory.getPerson;
-import iqcarecompanion.core.hapiwrapper.HAPIWrappers;
 import iqcarecompanion.core.entities.LabResult;
-import iqcarecompanion.core.utils.ResourceManager;
+import iqcarecompanion.core.hapiwrapper.HAPIWrappers;
+import static iqcarecompanion.core.utils.PropertiesManager.readConfigFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,9 +19,10 @@ public class LabManager {
 
     final static Logger logger = Logger.getLogger(LabManager.class.getName());
     final static int TOTAL_LAB_RESULTS = 100;
+    final static String LAB_RESULT_ID_KEY = "labResultId";
     
     public static void generateLabResultsORU() {
-            String labResultId = ResourceManager.readConfigFile("labResultId");
+            String labResultId = readConfigFile(LAB_RESULT_ID_KEY);
         
             List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, labResultId);
 
