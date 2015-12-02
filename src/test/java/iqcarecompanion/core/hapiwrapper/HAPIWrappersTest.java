@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package iqcarecompanion.core.hapiwrapper;
 
 import java.util.Date;
@@ -35,9 +31,6 @@ public class HAPIWrappersTest {
         eventValue = "";
     }
 
-    /**
-     * Test of createOBX method, of class HAPIWrappers.
-     */
     @Test
     public void testCreateOBXReturnsValidORUFiller() {
         OruFiller filler = HAPIWrappers.createOBX(eventName, eventValue, new Date());

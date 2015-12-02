@@ -22,23 +22,20 @@ public class LabManager {
     final static String LAB_RESULT_ID_KEY = "labResultId";
     
     public static void generateLabResultsORU() {
-            String labResultId = readConfigFile(LAB_RESULT_ID_KEY);
-        
-            List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, labResultId);
+        String labResultId = readConfigFile(LAB_RESULT_ID_KEY);
 
-            if (!labResults.isEmpty()) {
-                for (LabResult labResult : labResults) {
-                    if (labResult != null) {
-                        Person person = getPerson(labResult.getVisit().getPatientId());
-                        OruFiller filler = HAPIWrappers.createOBX(labResult.getLabTest().getValue(), labResult.getResult(), labResult.getVisit().getVisitDate());
-                        List<OruFiller> fillers = new ArrayList<>();
-                        fillers.add(filler);
-                        HAPIWrappers.generateORUMsg(fillers, person);
-                    }
+        List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, labResultId);
+
+        if (!labResults.isEmpty()) {
+            for (LabResult labResult : labResults) {
+                if (labResult != null) {
+                    Person person = getPerson(labResult.getVisit().getPatientId());
+                    OruFiller filler = HAPIWrappers.createOBX(labResult.getLabTest().getValue(), labResult.getResult(), labResult.getVisit().getVisitDate());
+                    List<OruFiller> fillers = new ArrayList<>();
+                    fillers.add(filler);
+                    HAPIWrappers.generateORUMsg(fillers, person);
                 }
             }
-
-        
+        }  
     }
-
 }
