@@ -96,7 +96,11 @@ public class VisitFactory {
             logger.log(Level.SEVERE,sb.toString(),e);
         } finally {
             if (preparedStatement != null) {
-                preparedStatement.close();
+                try {
+                    preparedStatement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(VisitFactory.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         updateLastId(final_visit_id, LAST_VISIT_ID_RECORDED);

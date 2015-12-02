@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package iqcarecompanion.core.utils;
 
 import static iqcarecompanion.core.utils.PropertiesManager.getProperties;
 
 /**
  *
- * @author Ted
+ * @author Teddy Odhiambo
  */
 public class ConstantProperties extends PropertiesManager {
     public static final String DB_DRIVER = getProperties().getProperty("db_driver");
