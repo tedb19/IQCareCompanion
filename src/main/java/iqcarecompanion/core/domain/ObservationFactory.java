@@ -26,7 +26,7 @@ public class ObservationFactory {
     
     final static Logger logger = Logger.getLogger(ObservationFactory.class.getName());
     
-    public static Observation getObservation(Event event, Visit visit) throws SQLException {
+    public static Observation getObservation(Event event, Visit visit) {
         Connection dbConnection;
         Observation observation = null;
         PreparedStatement preparedStatement = null;
@@ -90,12 +90,19 @@ public class ObservationFactory {
                 
                 observation = setTransformations(observation, observationValue, event, eventDate, visit);
             }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE,"{0} An error occured during the execution of the followiing query:\n{1}\n{2}" ,
-                    new Object[]{LOG_PREFIX, sql, e.toString()});
-        } finally {
+        } catch (SQLException ex) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the execution of the following query:\n")
+                    .append(sql);
+            logger.log(Level.SEVERE,sb.toString(),ex);
+        }  finally {
             if (preparedStatement != null) {
-                preparedStatement.close();
+                try {
+                    preparedStatement.close();
+                } catch (SQLException ex) {
+                    logger.log(Level.SEVERE, "The following issue is preventing the preparedStatement from closing:\n", ex);
+                }
             }
         }
         return observation;

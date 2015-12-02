@@ -46,7 +46,7 @@ public class DBConnector {
                 DB_CONNECTION = sbDbCon.toString();
                 Class.forName(ConstantProperties.DB_DRIVER);
             } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
+                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e.toString()});
             }
 
             try {
@@ -54,21 +54,24 @@ public class DBConnector {
                 if (windowsAuthentication.equals("true")) {
                     dbConnection = DriverManager.getConnection(
                             DB_CONNECTION);
-                    logger.log(Level.FINE,
+                    logger.log(Level.INFO,
                             "{0} Connection to IQCare database established. Using Windows Authentication.\n{1}",
                             new Object[]{LOG_PREFIX, DB_CONNECTION});
 
                 } else {
                     dbConnection = DriverManager.getConnection(
                             DB_CONNECTION, DB_USER, DB_PASSWORD);
-                    logger.log(Level.FINE,
+                    logger.log(Level.INFO,
                             "{0} Connection to IQCare database established. Using SQL Server Authentication.\n{1}",
                             new Object[]{LOG_PREFIX, DB_CONNECTION});
                 }
                 return dbConnection;
 
             } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
+                StringBuilder sb = new StringBuilder();
+                sb.append(LOG_PREFIX)
+                        .append(" An error occurred while creating the Connection instance:\n");
+            logger.log(Level.SEVERE,sb.toString(),e);
             }
 
             return dbConnection;

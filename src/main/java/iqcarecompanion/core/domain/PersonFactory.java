@@ -1,6 +1,7 @@
 package iqcarecompanion.core.domain;
 
 import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
 import iqcarecompanion.core.utils.ResultsetToList;
 import java.io.IOException;
@@ -28,16 +29,11 @@ public class PersonFactory {
 
     final static Logger logger = Logger.getLogger(PersonFactory.class.getName());
 
-    public static Person getPerson(int id) throws SQLException {
+    public static Person getPerson(int id) {
 
         Person person = new Person();
 
-        List rs = null;
-        try {
-            rs = getPatient(id);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
+        List rs = getPatient(id);
 
         if (rs != null && !rs.isEmpty()) {
             for (Object o : rs) {
@@ -133,7 +129,7 @@ public class PersonFactory {
         return person;
     }
 
-    private static List getPatient(int primary_key) throws SQLException, IOException {
+    private static List getPatient(int primary_key) {
 
         Connection dbConnection;
         PreparedStatement preparedStatement = null;
@@ -161,19 +157,25 @@ public class PersonFactory {
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setInt(1, primary_key);
 
-            // execute select SQL stetement
             rs = preparedStatement.executeQuery();
 
             results = ResultsetToList.resultSetToList(rs);
 
         } catch (SQLException e) {
-
-            System.out.println(e.getMessage());
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the execution of the following query:\n")
+                    .append(sql);
+            logger.log(Level.SEVERE,sb.toString(),e);
 
         } finally {
 
             if (preparedStatement != null) {
-                preparedStatement.close();
+                try {
+                    preparedStatement.close();
+                } catch (SQLException ex) {
+                    logger.log(Level.SEVERE, "The following issue is preventing the preparedStatement from closing:\n", ex);
+                }
             }
         }
         return results;
