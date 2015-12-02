@@ -4,12 +4,9 @@ import static iqcarecompanion.core.domain.LabResultFactory.getLabResults;
 import static iqcarecompanion.core.domain.PersonFactory.getPerson;
 import iqcarecompanion.core.hapiwrapper.HAPIWrappers;
 import iqcarecompanion.core.entities.LabResult;
-import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.ResourceManager;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.kemricdc.entities.Person;
 import org.kemricdc.hapi.oru.OruFiller;
@@ -24,7 +21,6 @@ public class LabManager {
     final static int TOTAL_LAB_RESULTS = 100;
     
     public static void generateLabResultsORU() {
-        try {
             String labResultId = ResourceManager.readConfigFile("labResultId");
         
             List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, labResultId);
@@ -41,12 +37,7 @@ public class LabManager {
                 }
             }
 
-        } catch (IOException ex) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(LOG_PREFIX)
-                        .append(" An error occurred while reading the last lab result ID from the properties file:\n");
-                logger.log(Level.SEVERE,sb.toString(),ex);
-        }
+        
     }
 
 }

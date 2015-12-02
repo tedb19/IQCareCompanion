@@ -22,14 +22,42 @@ public class PropertiesManager {
     private static final String runtimePropertiesFile = "runtime.properties";
     private static Properties properties;
 
-    public static String readConfigFile(String key) throws IOException {
-        Properties prop = new Properties();
-        String propFileLocation = confPath + runtimePropertiesFile;
-        FileInputStream input = new FileInputStream(propFileLocation);
-        prop.load(input);
-        return prop.getProperty(key);
+    /*
+    * Reads a single property from the runtime property file.
+    * Hits the property file each time, since we need the latest
+    * value
+    */
+    public static String readConfigFile(String key) {
+        FileInputStream input = null;
+        String value = null;
+        try {
+            Properties prop = new Properties();
+            String propFileLocation = confPath + runtimePropertiesFile;
+            input = new FileInputStream(propFileLocation);
+            prop.load(input);
+            value = prop.getProperty(key);
+        } catch (IOException ex) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred while reading the iqcarecompanion properties:\n");
+            logger.log(Level.SEVERE,sb.toString(),ex);
+        } finally {
+            if(input != null){
+                try {
+                    input.close();
+                } catch (IOException ex) {
+                    logger.log(Level.SEVERE, "The following issue is preventing the FileInputStream from closing:\n", ex);
+                }
+            }
+        }
+        return value;
     }
 
+    /*
+    * Reads all the properties from the iqcarecompanion file,
+    * and stores them in memory.
+    * Hits the properties file only once
+    */
     protected static synchronized Properties getProperties(){
 
         if (properties != null) {
@@ -53,14 +81,29 @@ public class PropertiesManager {
         return properties;
     }
 
-    public static void modifyConfigFile(String key, String value) throws IOException {
-        Properties prop = new Properties();
-        FileInputStream fis = new FileInputStream(confPath + runtimePropertiesFile);
-        prop.load(fis);
-        prop.setProperty(key, value);
-
-        FileOutputStream fos = new FileOutputStream(confPath + runtimePropertiesFile);
-        prop.store(fos, null);
+    public static void modifyConfigFile(String key, String value) {
+        FileInputStream fis = null;
+        try {
+            Properties prop = new Properties();
+            fis = new FileInputStream(confPath + runtimePropertiesFile);
+            prop.load(fis);
+            prop.setProperty(key, value);
+            FileOutputStream fos = new FileOutputStream(confPath + runtimePropertiesFile);
+            prop.store(fos, null);
+        } catch (IOException ex) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred while modifying the runtime properties:\n");
+            logger.log(Level.SEVERE,sb.toString(),ex);
+        } finally {
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    logger.log(Level.SEVERE, "The following issue is preventing the FileInputStream from closing:\n", ex);
+                }
+            }
+        }
 
     }
 
