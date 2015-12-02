@@ -2,23 +2,10 @@
 package iqcarecompanion.core.utils;
 
 import iqcarecompanion.core.jsonMapper.Event;
-import static iqcarecompanion.core.utils.ResourceManager.modifyConfigFile;
-import static iqcarecompanion.core.utils.ResourceManager.readConfigFile;
-import static iqcarecompanion.core.utils.ResourceManager.readJSONFile;
+import static iqcarecompanion.core.utils.ConstantProperties.SENTINEL_EVENTS;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.isIn;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -34,7 +21,7 @@ public class ResourceManagerTest {
 
     @Before
     public void setUp() throws IOException {
-        events = ResourceManager.readJSONFile();
+        events = SENTINEL_EVENTS;
     }
     
     @After
