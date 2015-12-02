@@ -5,7 +5,14 @@
  */
 package iqcarecompanion.core.utils;
 
-import java.io.IOException;
+import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
+import static iqcarecompanion.core.utils.ConstantProperties.DB_PASSWORD;
+import static iqcarecompanion.core.utils.ConstantProperties.DB_USER;
+import static iqcarecompanion.core.utils.ConstantProperties.HOST;
+import static iqcarecompanion.core.utils.ConstantProperties.INSTANCE;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
+import static iqcarecompanion.core.utils.ConstantProperties.PORT;
+import static iqcarecompanion.core.utils.ConstantProperties.windowsAuthentication;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,41 +26,27 @@ import java.util.logging.Logger;
 public class DBConnector {
 
     final static Logger logger = Logger.getLogger(DBConnector.class.getName());
-    private static String DB_DRIVER = null;
-    private static String DB_CONNECTION = null;
-    private static String DB_USER = "";
-    private static String DB_PASSWORD = "";
-    private static String windowsAuthentication = "false";
-    private static String HOST = null;
-    private static String INSTANCE = null;
-    private static String PORT = null;
-    private static String DB_NAME = null;
     private static Connection dbConnection;
-
-    private DBConnector() {
-
-    }
+    private static String DB_CONNECTION = null;
+    
+    private DBConnector() {}
 
     public static Connection connectionInstance() {
         if (dbConnection == null) {
             try {
-                DB_DRIVER = ResourceManager.readConfigFile("db_driver", "iqcarecompanion.properties");
-                HOST = ResourceManager.readConfigFile("host", "iqcarecompanion.properties");
-                PORT = ResourceManager.readConfigFile("port", "iqcarecompanion.properties");
-                INSTANCE = ResourceManager.readConfigFile("instance", "iqcarecompanion.properties");
-                DB_NAME = ResourceManager.readConfigFile("db_name", "iqcarecompanion.properties");
-                DB_CONNECTION = "jdbc:jtds:sqlserver://" + HOST + ":" + PORT + ";databaseName=" + DB_NAME + ";instance=" + INSTANCE;
-                DB_USER = ResourceManager.readConfigFile("db_user", "iqcarecompanion.properties");
-                DB_PASSWORD = ResourceManager.readConfigFile("db_password", "iqcarecompanion.properties");
-                windowsAuthentication = ResourceManager.readConfigFile(
-                        "windowsAuthentication", "iqcarecompanion.properties");
-
-                Class.forName(DB_DRIVER);
-
+                StringBuilder sbDbCon = new StringBuilder();
+                sbDbCon.append("jdbc:jtds:sqlserver://")
+                        .append(HOST)
+                        .append(":").append(PORT)
+                        .append(";databaseName=")
+                        .append(DB_NAME)
+                        .append(";instance=")
+                        .append(INSTANCE);
+                
+                DB_CONNECTION = sbDbCon.toString();
+                Class.forName(ConstantProperties.DB_DRIVER);
             } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "Oooops! The iqcarecompanion.properties file could not be found at " + ResourceManager.confPath, e);
+                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
             }
 
             try {
@@ -62,13 +55,15 @@ public class DBConnector {
                     dbConnection = DriverManager.getConnection(
                             DB_CONNECTION);
                     logger.log(Level.FINE,
-                            "Connection to IQCare database established. Using Windows Authentication");
+                            "{0} Connection to IQCare database established. Using Windows Authentication.\n{1}",
+                            new Object[]{LOG_PREFIX, DB_CONNECTION});
 
                 } else {
                     dbConnection = DriverManager.getConnection(
                             DB_CONNECTION, DB_USER, DB_PASSWORD);
                     logger.log(Level.FINE,
-                            "Connection to IQCare database established. Using SQL Server Authentication");
+                            "{0} Connection to IQCare database established. Using SQL Server Authentication.\n{1}",
+                            new Object[]{LOG_PREFIX, DB_CONNECTION});
                 }
                 return dbConnection;
 

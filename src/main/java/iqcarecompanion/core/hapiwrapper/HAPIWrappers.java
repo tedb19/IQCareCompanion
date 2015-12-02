@@ -6,13 +6,12 @@
 package iqcarecompanion.core.hapiwrapper;
 
 import ca.uhn.hl7v2.HL7Exception;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
+import static iqcarecompanion.core.utils.RuntimeDirectory.createHl7Dump;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +21,7 @@ import org.kemricdc.hapi.oru.ProcessTransactions;
 
 /**
  *
- * @author Teddy
+ * @author Teddy Odhiambo
  */
 public class HAPIWrappers {
     
@@ -49,32 +48,20 @@ public class HAPIWrappers {
         if(!fillers.isEmpty()){
             try {
                 ProcessTransactions bXSegment = new ProcessTransactions(person,fillers);
-                String bXString = bXSegment.generateORU();
-                createHl7OnDisk(bXString,"ORU-R01");
-                logger.log(Level.INFO, bXString);
+                
+                String bXString = bXSegment.generateORU(
+                        ConstantProperties.APPLICATION_NAME,
+                        ConstantProperties.FACILITY_NAME,
+                        ConstantProperties.MFL_CODE,
+                        ConstantProperties.CDS_NAME,
+                        ConstantProperties.CDS_APPLICATION_NAME
+                );
+                
+                createHl7Dump(bXString,"ORU-R01");
+                logger.log(Level.INFO, "{0} {1}", new Object[]{LOG_PREFIX, bXString});
             } catch (HL7Exception|IOException ex) {
-                logger.log(Level.SEVERE, ex.toString(), ex);
+                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
             }
-        }
-    }
-    
-    private static void createHl7OnDisk(String s, String msgType) throws FileNotFoundException, IOException{
-        File hl7File=new File(System.getProperty("user.home")+ File.separator + "IQCare-Companion" + File.separator + "Dumps");
-        Random random = new Random();
-        if(!hl7File.exists()){
-            hl7File.mkdir();
-            logger.log(Level.INFO, 
-                "Created the folder {0} to be used for hl7 backups",hl7File.getCanonicalPath());
-        }
-
-         File f = new File(hl7File, ((random.nextInt(Integer.MAX_VALUE) + 1) + "-" + msgType+".hl7"));
-         logger.log(Level.INFO, 
-                "Created {0} on disk to be sent to regional server at ..",f.getCanonicalPath());
-
-        try (FileOutputStream fos = new FileOutputStream(f)) {
-            byte[] b = s.getBytes();
-            fos.write(b);
-            fos.flush();
         }
     }
 }

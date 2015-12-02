@@ -2,9 +2,23 @@
 package iqcarecompanion.core.utils;
 
 import iqcarecompanion.core.jsonMapper.Event;
+import static iqcarecompanion.core.utils.ResourceManager.modifyConfigFile;
+import static iqcarecompanion.core.utils.ResourceManager.readConfigFile;
+import static iqcarecompanion.core.utils.ResourceManager.readJSONFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.isIn;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -17,14 +31,15 @@ import org.junit.Test;
  */
 public class ResourceManagerTest {
     private List<Event> events;
-    
+
     @Before
     public void setUp() throws IOException {
-        events = ResourceManager.readJSONFile("events.txt");
+        events = ResourceManager.readJSONFile();
     }
     
     @After
     public void tearDown() {
+        events.clear();
     }
 
     @Test
@@ -55,11 +70,5 @@ public class ResourceManagerTest {
         for(Event event:events){
             assertThat(event.eventValueDataType, isIn(validDataTypes));
         }
-    }
-    
-    @Test(expected=IOException.class)
-    public void testReadJSONFileWithWrongFileName() throws IOException{
-        ResourceManager.readJSONFile("/somewhere/wrong.txt");
-    }
-    
+    }    
 }

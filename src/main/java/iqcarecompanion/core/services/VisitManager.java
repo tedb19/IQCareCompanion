@@ -6,8 +6,7 @@ import iqcarecompanion.core.entities.Observation;
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.hapiwrapper.HAPIWrappers;
 import iqcarecompanion.core.jsonMapper.Event;
-import iqcarecompanion.core.utils.ResourceManager;
-import java.io.IOException;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +38,8 @@ public class VisitManager {
             Person person = null;
             try {
                 Observation observation;
-                String dbName = ResourceManager.readConfigFile("db_name", "iqcarecompanion.properties");
-                String symmetricKey = ResourceManager.readConfigFile("symmetric_key", "iqcarecompanion.properties");
-                String enc_password = ResourceManager.readConfigFile("enc_password", "iqcarecompanion.properties");
                 
-                person = getPerson(visit.getPatientId(), symmetricKey, dbName, enc_password);
+                person = getPerson(visit.getPatientId());
                 if (person != null) {
                     for (Event event : events) {
                         observation = getObservation(event, visit);
@@ -57,8 +53,8 @@ public class VisitManager {
                         }
                     }
                 }
-            } catch (SQLException|IOException ex) {
-                logger.log(Level.SEVERE, ex.toString(), ex);
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
             }
             if (!fillers.isEmpty() && person != null) {
                 HAPIWrappers.generateORUMsg(fillers, person);

@@ -1,7 +1,7 @@
 package iqcarecompanion.core.domain;
 
+import iqcarecompanion.core.utils.ConstantProperties;
 import iqcarecompanion.core.utils.DBConnector;
-import iqcarecompanion.core.utils.ResourceManager;
 import iqcarecompanion.core.utils.ResultsetToList;
 import java.io.IOException;
 import java.sql.Connection;
@@ -28,13 +28,13 @@ public class PersonFactory {
 
     final static Logger logger = Logger.getLogger(PersonFactory.class.getName());
 
-    public static Person getPerson(int id, String symmetricKey, String dbName, String enc_password) throws SQLException {
+    public static Person getPerson(int id) throws SQLException {
 
         Person person = new Person();
 
         List rs = null;
         try {
-            rs = getPatient(id, symmetricKey, dbName, enc_password);
+            rs = getPatient(id);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -133,7 +133,7 @@ public class PersonFactory {
         return person;
     }
 
-    private static List getPatient(int primary_key, String symmetricKey, String dbName, String enc_password) throws SQLException, IOException {
+    private static List getPatient(int primary_key) throws SQLException, IOException {
 
         Connection dbConnection;
         PreparedStatement preparedStatement = null;
@@ -143,16 +143,16 @@ public class PersonFactory {
         StringBuilder sbSql = new StringBuilder();
 
         sbSql.append("Declare @SymKey varchar(400)\n")
-                .append("USE ").append(dbName).append("\n")
+                .append("USE ").append(ConstantProperties.DB_NAME).append("\n")
                 .append("Set @SymKey = 'Open symmetric key ")
-                .append(symmetricKey).append(" decryption by password=''")
-                .append(enc_password).append("'''\n")
+                .append(ConstantProperties.SYMMETRIC_KEY).append(" decryption by password=''")
+                .append(ConstantProperties.ENCRYPTION_PASSWORD).append("'''\n")
                 .append("exec(@SymKey)\n")
                 .append("SELECT convert(varchar(50), decryptbykey(Emp.firstname)) AS firstname_decrypted,\n")
                 .append("convert(varchar(50), decryptbykey(Emp.middlename)) AS middlename_decrypted ,\n")
                 .append("convert(varchar(50), decryptbykey(Emp.lastname)) AS lastname_decrypted ,*\n")
-                .append("FROM [").append(dbName).append("].[dbo].mst_Patient AS Emp WHERE [Ptn_Pk] = ?\n")
-                .append("Close symmetric key ").append(symmetricKey);
+                .append("FROM [").append(ConstantProperties.DB_NAME).append("].[dbo].mst_Patient AS Emp WHERE [Ptn_Pk] = ?\n")
+                .append("Close symmetric key ").append(ConstantProperties.SYMMETRIC_KEY);
         String sql = sbSql.toString();
         try {
             dbConnection = DBConnector.connectionInstance();
