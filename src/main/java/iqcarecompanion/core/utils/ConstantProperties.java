@@ -1,12 +1,18 @@
 package iqcarecompanion.core.utils;
 
+import iqcarecompanion.core.jsonMapper.Event;
 import static iqcarecompanion.core.utils.PropertiesManager.getProperties;
+import java.util.List;
 
 /**
  *
  * @author Teddy Odhiambo
  */
 public class ConstantProperties extends PropertiesManager {
+    /*
+    * A collection of all the variables read from the properties file and the json file
+    * whose values don't change at runtime
+    */
     public static final String DB_DRIVER = getProperties().getProperty("db_driver");
     public static final String DB_PASSWORD = getProperties().getProperty("db_password");
     public static final String windowsAuthentication = getProperties().getProperty("windowsAuthentication");
@@ -24,5 +30,6 @@ public class ConstantProperties extends PropertiesManager {
     public static final String CDS_NAME = getProperties().getProperty("cds_name");
     public static final String CDS_APPLICATION_NAME = getProperties().getProperty("cdsapplication_name");
     public static final String LOG_PREFIX = "(" + FACILITY_NAME + ":"+ APPLICATION_NAME + ")";
+    public static final List<Event> SENTINEL_EVENTS = ResourceManager.readJSONFile();
     
 }
