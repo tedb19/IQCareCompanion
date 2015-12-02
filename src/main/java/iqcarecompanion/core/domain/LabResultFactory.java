@@ -5,10 +5,10 @@ import static iqcarecompanion.core.domain.VisitFactory.getVisit;
 import iqcarecompanion.core.entities.LabResult;
 import iqcarecompanion.core.entities.LabTest;
 import iqcarecompanion.core.entities.Visit;
+import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
-import iqcarecompanion.core.utils.ResourceManager;
 import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +27,7 @@ public class LabResultFactory {
 
     final static Logger logger = Logger.getLogger(LabResultFactory.class.getName());
 
-    public static List<LabResult> getLabResults(int limit, String dbName, String labResultId, String labTests) throws SQLException {
+    public static List<LabResult> getLabResults(int limit, String labResultId) throws SQLException {
         LabResult labResult;
         List<LabResult> labResults = new ArrayList<>();
         Connection dbConnection;
@@ -37,7 +37,7 @@ public class LabResultFactory {
         int visitId = 0;
         final String LAST_LAB_ID_RECORDED = "labResultId";
 
-        String[] splitLabtest = StringUtils.split(labTests, ",");
+        String[] splitLabtest = StringUtils.split(ConstantProperties.LAB_TESTS, ",");
         int totalLabTests = splitLabtest.length;
        
         StringBuilder sbSqlLabTestId = new StringBuilder();
@@ -60,7 +60,7 @@ public class LabResultFactory {
                 .append(" LabID,LabTestID,TestResults,CreateDate\n");
         
         sbSqlLabResults.append("  FROM ")
-                .append(dbName)
+                .append(ConstantProperties.DB_NAME)
                 .append(".dbo.dtl_PatientLabResults where LabID > ")
                 .append(labResultId)
                 .append(" and \n");
@@ -95,7 +95,7 @@ public class LabResultFactory {
                     int labID = rs.getInt("LabID");
                     StringBuilder sbSqlLabOrder = new StringBuilder();
                     sbSqlLabOrder.append("SELECT Ptn_pk,VisitId FROM ")
-                            .append(dbName)
+                            .append(ConstantProperties.DB_NAME)
                             .append(".dbo.ord_PatientLabOrder where [LabID] = ")
                             .append(labID);
                     
@@ -104,7 +104,7 @@ public class LabResultFactory {
                     while (orderRs.next()) {
                         visitId = orderRs.getInt("VisitId");
                     }
-                    Visit visit = getVisit(visitId, dbName);
+                    Visit visit = getVisit(visitId);
                     labResult.setVisit(visit);
                     labResults.add(labResult);
 
@@ -114,7 +114,7 @@ public class LabResultFactory {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
+            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
         } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();

@@ -4,6 +4,7 @@ import static iqcarecompanion.core.domain.LabResultFactory.getLabResults;
 import static iqcarecompanion.core.domain.PersonFactory.getPerson;
 import iqcarecompanion.core.hapiwrapper.HAPIWrappers;
 import iqcarecompanion.core.entities.LabResult;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.ResourceManager;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,19 +26,14 @@ public class LabManager {
     
     public static void generateLabResultsORU() {
         try {
-            String dbName = ResourceManager.readConfigFile("db_name", "iqcarecompanion.properties");
-            String labResultId = ResourceManager.readConfigFile("labResultId", "runtime.properties");
-            String labTests = ResourceManager.readConfigFile("labTests", "iqcarecompanion.properties");
-            String symmetricKey = ResourceManager.readConfigFile("symmetric_key", "iqcarecompanion.properties");
-            String enc_password = ResourceManager.readConfigFile("enc_password", "iqcarecompanion.properties");
+            String labResultId = ResourceManager.readConfigFile("labResultId");
         
-            List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, dbName, labResultId, labTests);
+            List<LabResult> labResults = getLabResults(TOTAL_LAB_RESULTS, labResultId);
 
             if (!labResults.isEmpty()) {
-                //The LabResultFactory has returned 18 lab results
                 for (LabResult labResult : labResults) {
                     if (labResult != null) {
-                        Person person = getPerson(labResult.getVisit().getPatientId(), symmetricKey, dbName, enc_password);
+                        Person person = getPerson(labResult.getVisit().getPatientId());
                         OruFiller filler = HAPIWrappers.createOBX(labResult.getLabTest().getValue(), labResult.getResult(), labResult.getVisit().getVisitDate());
                         List<OruFiller> fillers = new ArrayList<>();
                         fillers.add(filler);
@@ -47,7 +43,7 @@ public class LabManager {
             }
 
         } catch (SQLException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
         }
     }
 

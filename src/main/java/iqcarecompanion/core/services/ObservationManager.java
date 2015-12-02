@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import iqcarecompanion.core.jsonMapper.Event;
 import static iqcarecompanion.core.services.VisitManager.generateVisitHl7s;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.ResourceManager;
 import java.io.IOException;
 
@@ -21,12 +22,11 @@ public class ObservationManager {
     
     public static void mineEvents() {
         try {
-            String lastVisitId = ResourceManager.readConfigFile("last_visit_id", "runtime.properties");
-            String dbName = ResourceManager.readConfigFile("db_name", "iqcarecompanion.properties");
-            List<Event> events = ResourceManager.readJSONFile("events.txt");
-            generateVisitHl7s(getVisits(TOTAL_VISITS, lastVisitId, dbName), events);
+            String lastVisitId = ResourceManager.readConfigFile("last_visit_id");
+            List<Event> events = ResourceManager.readJSONFile();
+            generateVisitHl7s(getVisits(TOTAL_VISITS, lastVisitId), events);
         } catch (SQLException | IOException ex) {
-            logger.log(Level.SEVERE, ex.toString(), ex);
+            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
         }
     }
 

@@ -1,9 +1,9 @@
 
 package iqcarecompanion.core.domain;
 
+import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
-import iqcarecompanion.core.utils.ResourceManager;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Teddy
+ * @author Teddy Odhiambo
  */
 public class RegimenFactory {
 
     final static Logger logger = Logger.getLogger(RegimenFactory.class.getName());
 
-    private static String getCurrentRegimen(int visit_pk, String dbName) {
+    public static String getCurrentRegimen(int visit_pk) {
 
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -28,10 +28,10 @@ public class RegimenFactory {
         try (Connection dbConnection = DBConnector.connectionInstance();) {
             StringBuilder sbSql = new StringBuilder();
             
-            sbSql.append("USE [").append(dbName)
+            sbSql.append("USE [").append(ConstantProperties.DB_NAME)
                     .append("]\n")
                     .append("SELECT DISTINCT RegimenType")
-                    .append(" FROM ").append(dbName)
+                    .append(" FROM ").append(ConstantProperties.DB_NAME)
                     .append(".dbo.dtl_RegimenMap WHERE Visit_Pk = ?");
             preparedStatement = dbConnection.prepareStatement(sbSql.toString());
             preparedStatement.setInt(1, visit_pk);
@@ -41,19 +41,8 @@ public class RegimenFactory {
                 regimenType = rs.getString("RegimenType");
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
+            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
         }
         return regimenType;
     }
-    
-     public static String currentRegimen(int visit_pk){
-         String regimen="";
-         try {
-            String dbName = ResourceManager.readConfigFile("db_name", "iqcarecompanion.properties");
-            regimen = getCurrentRegimen(visit_pk, dbName);
-         } catch(IOException e){
-             logger.log(Level.SEVERE, e.toString(), e);
-         }
-         return regimen;
-     }
 }

@@ -1,10 +1,12 @@
 
 package iqcarecompanion.core.domain;
 
-import static iqcarecompanion.core.domain.RegimenFactory.currentRegimen;
+import static iqcarecompanion.core.domain.RegimenFactory.getCurrentRegimen;
 import iqcarecompanion.core.entities.Observation;
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.jsonMapper.Event;
+import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
 import iqcarecompanion.core.utils.DateUtil;
 import java.sql.Connection;
@@ -35,12 +37,16 @@ public class ObservationFactory {
         StringBuilder sbSql = new StringBuilder();
         if (StringUtils.equals(event.visitIdColumn, "")) {
             sbSql.append("SELECT * FROM ")
+                    .append(ConstantProperties.DB_NAME)
+                    .append(".dbo.")
                     .append(event.tableName)
                     .append(" where Ptn_pk = ")
                     .append(visit.getPatientId());
             
         } else {
             sbSql.append("SELECT * FROM ")
+                    .append(ConstantProperties.DB_NAME)
+                    .append(".dbo.")
                     .append(event.tableName)
                     .append(" where ")
                     .append(event.visitIdColumn)
@@ -48,6 +54,7 @@ public class ObservationFactory {
                     .append(visit.getVisitId());
         }
         sql = sbSql.toString();
+        
         try {
             dbConnection = DBConnector.connectionInstance();
             preparedStatement = dbConnection.prepareStatement(sql,
@@ -84,8 +91,8 @@ public class ObservationFactory {
                 observation = setTransformations(observation, observationValue, event, eventDate, visit);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
-            logger.log(Level.SEVERE, "The sql statement is: {0}", sql);
+            logger.log(Level.SEVERE,"{0} An error occured during the execution of the followiing query:\n{1}\n{2}" ,
+                    new Object[]{LOG_PREFIX, sql, e.toString()});
         } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
@@ -121,7 +128,7 @@ public class ObservationFactory {
                         String value = splitTransformer[1];
                         if (observationValue.equalsIgnoreCase(key)) {
                             if (StringUtils.equals(event.eventName, "FIRST_LINE_REGIMEN") || StringUtils.equals(event.eventName, "SECOND_LINE_REGIMEN")) {
-                                String regimen = currentRegimen(visit.getVisitId());
+                                String regimen = getCurrentRegimen(visit.getVisitId());
                                 observation.setObservationValue(regimen);
                             } else {
                                 observation.setObservationValue(value);

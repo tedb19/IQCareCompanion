@@ -3,7 +3,7 @@
     "eventName": "WHO_STAGE",
     "tableName": "dtl_PatientStage",
     "eventValueColumn": "WHOStage",
-    "eventValueDataType": "INT1",
+    "eventValueDataType": "INT",
     "eventDateColumn": "",
     "visitIdColumn": "Visit_Pk",
     "transformations": [
@@ -38,28 +38,6 @@
     ]
   },
   {
-    "eventName": "HIV_DIAGNOSIS",
-    "tableName": "dtl_PatientHivPrevCareEnrollment",
-    "eventValueColumn": "FirstHIVPosTestDate",
-    "eventValueDataType": "DATE",
-    "eventDateColumn": "",
-    "visitIdColumn": "Visit_pk",
-    "transformations": [
-      
-    ]
-  },
-  {
-    "eventName": "ART_START",
-    "tableName": "dtl_PatientHivPrevCareEnrollment",
-    "eventValueColumn": "ARTStartDate",
-    "eventValueDataType": "DATE",
-    "eventDateColumn": "",
-    "visitIdColumn": "Visit_pk",
-    "transformations": [
-      
-    ]
-  },
-  {
     "eventName": "TB_DIAGNOSIS",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "longTermTBStartDate",
@@ -76,6 +54,28 @@
     "eventValueColumn": "PrevARVsCD4",
     "eventValueDataType": "DECIMAL",
     "eventDateColumn": "PrevARVsCD4Date",
+    "visitIdColumn": "Visit_pk",
+    "transformations": [
+      
+    ]
+  },
+ {
+    "eventName": "HIV_DIAGNOSIS",
+    "tableName": "dtl_PatientHivPrevCareEnrollment",
+    "eventValueColumn": "FirstHIVPosTestDate",
+    "eventValueDataType": "DATE",
+    "eventDateColumn": "",
+    "visitIdColumn": "Visit_pk",
+    "transformations": [
+      
+    ]
+  },
+  {
+    "eventName": "ART_START",
+    "tableName": "dtl_PatientHivPrevCareEnrollment",
+    "eventValueColumn": "ARTStartDate",
+    "eventValueDataType": "DATE",
+    "eventDateColumn": "",
     "visitIdColumn": "Visit_pk",
     "transformations": [
       
