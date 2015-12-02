@@ -24,15 +24,16 @@ public class RegimenFactory {
         PreparedStatement preparedStatement;
         ResultSet rs;
         String regimenType = "";
+        StringBuilder sbSql = new StringBuilder();
 
+        sbSql.append("USE [").append(ConstantProperties.DB_NAME)
+                .append("]\n")
+                .append("SELECT DISTINCT RegimenType")
+                .append(" FROM ").append(ConstantProperties.DB_NAME)
+                .append(".dbo.dtl_RegimenMap WHERE Visit_Pk = ?");
+        
         try (Connection dbConnection = DBConnector.connectionInstance();) {
-            StringBuilder sbSql = new StringBuilder();
-            
-            sbSql.append("USE [").append(ConstantProperties.DB_NAME)
-                    .append("]\n")
-                    .append("SELECT DISTINCT RegimenType")
-                    .append(" FROM ").append(ConstantProperties.DB_NAME)
-                    .append(".dbo.dtl_RegimenMap WHERE Visit_Pk = ?");
+
             preparedStatement = dbConnection.prepareStatement(sbSql.toString());
             preparedStatement.setInt(1, visit_pk);
             rs = preparedStatement.executeQuery();
@@ -41,7 +42,11 @@ public class RegimenFactory {
                 regimenType = rs.getString("RegimenType");
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the execution of the following query:\n")
+                    .append(sbSql);
+            logger.log(Level.SEVERE,sb.toString(),e);
         }
         return regimenType;
     }

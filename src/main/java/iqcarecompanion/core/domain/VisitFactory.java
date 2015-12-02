@@ -44,7 +44,11 @@ public class VisitFactory {
 
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the execution of the following query:\n")
+                    .append(sql);
+            logger.log(Level.SEVERE,sb.toString(),e);
         } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
@@ -54,7 +58,7 @@ public class VisitFactory {
         return visit;
     }
 
-    public static List<Visit> getVisits(int limit, String lastVisitId) throws SQLException {
+    public static List<Visit> getVisits(int limit, String lastVisitId) {
         List<Visit> visits = new ArrayList<>();
         Visit visit;
         Connection dbConnection;
@@ -85,12 +89,15 @@ public class VisitFactory {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the execution of the following query:\n")
+                    .append(sql);
+            logger.log(Level.SEVERE,sb.toString(),e);
         } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
             }
-
         }
         updateLastId(final_visit_id, LAST_VISIT_ID_RECORDED);
 

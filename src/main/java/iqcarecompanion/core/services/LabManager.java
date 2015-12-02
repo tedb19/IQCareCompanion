@@ -7,7 +7,6 @@ import iqcarecompanion.core.entities.LabResult;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.ResourceManager;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,8 +41,11 @@ public class LabManager {
                 }
             }
 
-        } catch (SQLException | IOException ex) {
-            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
+        } catch (IOException ex) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(LOG_PREFIX)
+                        .append(" An error occurred while reading the last lab result ID from the properties file:\n");
+                logger.log(Level.SEVERE,sb.toString(),ex);
         }
     }
 

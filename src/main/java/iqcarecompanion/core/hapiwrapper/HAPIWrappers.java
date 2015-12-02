@@ -60,7 +60,10 @@ public class HAPIWrappers {
                 createHl7Dump(bXString,"ORU-R01");
                 logger.log(Level.INFO, "{0} {1}", new Object[]{LOG_PREFIX, bXString});
             } catch (HL7Exception|IOException ex) {
-                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
+                StringBuilder sb = new StringBuilder();
+                sb.append(LOG_PREFIX)
+                        .append(" An error occurred during the generation of the hl7 file:\n");
+                logger.log(Level.SEVERE,sb.toString(),ex);
             }
         }
     }

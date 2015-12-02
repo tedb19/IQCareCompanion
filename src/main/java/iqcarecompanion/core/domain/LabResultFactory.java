@@ -27,7 +27,7 @@ public class LabResultFactory {
 
     final static Logger logger = Logger.getLogger(LabResultFactory.class.getName());
 
-    public static List<LabResult> getLabResults(int limit, String labResultId) throws SQLException {
+    public static List<LabResult> getLabResults(int limit, String labResultId) {
         LabResult labResult;
         List<LabResult> labResults = new ArrayList<>();
         Connection dbConnection;
@@ -114,14 +114,20 @@ public class LabResultFactory {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the execution of the following query:\n")
+                    .append(sql);
+            logger.log(Level.SEVERE,sb.toString(),e);
         } finally {
             if (preparedStatement != null) {
-                preparedStatement.close();
+                try {
+                    preparedStatement.close();
+                } catch (SQLException ex) {
+                    logger.log(Level.SEVERE, "The following issue is preventing the preparedStatement from closing:\n", ex);
+                }
             }
-
         }
-
         updateLastId(final_lab_id, LAST_LAB_ID_RECORDED);
 
         return labResults;

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package iqcarecompanion.core.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,6 +25,7 @@ public class ResourceManager extends PropertiesManager {
     final static Logger resourceMngrlogger = Logger.getLogger(ResourceManager.class.getName());
     private static List<Event> events;
     private static final String jsonFile = "events.txt";
+    
     public static List<Event> readJSONFile() throws IOException {
         
         if(events != null){
@@ -48,7 +45,10 @@ public class ResourceManager extends PropertiesManager {
                 resourceMngrlogger.log(Level.INFO, "{0} {1} successfully updated to {2} in runtime.properties",
                         new Object[]{LOG_PREFIX, key, finalId});
             } catch (IOException ex) {
-                resourceMngrlogger.log(Level.SEVERE, ex.toString(), ex);
+                StringBuilder sb = new StringBuilder();
+                sb.append(LOG_PREFIX)
+                    .append(" An error occurred while modifying the runtime properties:\n");
+                resourceMngrlogger.log(Level.SEVERE,sb.toString(),ex);
             }
         }
     }
@@ -63,9 +63,4 @@ public class ResourceManager extends PropertiesManager {
             FileInputStream fis =  new FileInputStream(propFileLocation);
             LogManager.getLogManager().readConfiguration(fis);
     }
-    
-
-    
-
-
 }

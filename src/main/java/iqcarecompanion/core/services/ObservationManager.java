@@ -1,7 +1,6 @@
 package iqcarecompanion.core.services;
 
 import static iqcarecompanion.core.domain.VisitFactory.getVisits;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,13 +20,18 @@ public class ObservationManager {
     final static int TOTAL_VISITS = 100;
     
     public static void mineEvents() {
+
         try {
             String lastVisitId = ResourceManager.readConfigFile("last_visit_id");
             List<Event> events = ResourceManager.readJSONFile();
             generateVisitHl7s(getVisits(TOTAL_VISITS, lastVisitId), events);
-        } catch (SQLException | IOException ex) {
-            logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, ex});
+        } catch (IOException ex) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(LOG_PREFIX)
+                        .append(" An error occurred while reading the properties file(s):\n");
+                logger.log(Level.SEVERE,sb.toString(),ex);
         }
+        
     }
 
 }

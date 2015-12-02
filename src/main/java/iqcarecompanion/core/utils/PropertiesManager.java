@@ -43,8 +43,12 @@ public class PropertiesManager {
             logger.log(Level.INFO, "{0} The properties on {1} file were successfully loaded to memory.", 
                     new Object[]{LOG_PREFIX, iqcarecompanionPropertiesFile});
         } catch(IOException ex){
-            logger.log(Level.SEVERE, "{0} Oooops! The {1} file could not be found at {2}. {3}", 
-                    new Object[]{LOG_PREFIX,iqcarecompanionPropertiesFile, propFileLocation, ex});
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX).append(" Oooops! The ")
+                    .append(iqcarecompanionPropertiesFile)
+                    .append(" file could not be found at ")
+                    .append(confPath);
+            logger.log(Level.SEVERE,sb.toString(),ex);
         }
         return properties;
     }
