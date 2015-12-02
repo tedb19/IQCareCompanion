@@ -8,7 +8,6 @@ package iqcarecompanion.core.utils;
 
 import static iqcarecompanion.core.utils.PropertiesManager.modifyConfigFile;
 import static iqcarecompanion.core.utils.PropertiesManager.readConfigFile;
-import java.io.IOException;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -22,10 +21,9 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Ted
+ * @author Teddy Odhiambo
  */
 public class PropertiesManagerTest {
-    private static final String runtimePropFileName = "runtime.properties";
     private String key;
     private String value;
     
@@ -41,7 +39,7 @@ public class PropertiesManagerTest {
 
     
     @Test
-    public void testModifyConfigFile() throws IOException{
+    public void testModifyConfigFile() {
         String initialValue = readConfigFile(key);
         modifyConfigFile(key, value);
         String currentValue = readConfigFile(key);
@@ -51,7 +49,7 @@ public class PropertiesManagerTest {
     }
     
     @Test
-    public void testReadConfigFile() throws IOException{
+    public void testReadConfigFile() {
         String currentValue = readConfigFile(key);
         assertThat(currentValue, is(allOf(not(nullValue()),instanceOf(String.class))));  
     }
