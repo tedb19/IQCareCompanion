@@ -126,7 +126,7 @@
     <repositories>  
         <repository>            
                 <id>dropbox</id>                        
-                <url>https://www.dropbox.com/home/Public/mvn-repostory</url>                        
+                <url>https://www.dropbox.com/home/Public/mvn-repostory</url>                       
         </repository>           
     </repositories>
 
