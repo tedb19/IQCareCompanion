@@ -1,4 +1,1 @@
 language: java
-
-before_install:
-  -   mvn install:install-file -Dfile=https://www.dropbox.com/s/ufxb32knj9qbiox/HapiModuleV2-2.0.jar?dl=0 -DgroupId=org.kemricdc.com -DartifactId=HapiModuleV2 -Dversion=2.0 -Dpackaging=jar
