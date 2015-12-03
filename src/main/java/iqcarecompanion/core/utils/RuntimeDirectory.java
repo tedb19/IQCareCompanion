@@ -20,37 +20,34 @@ public class RuntimeDirectory {
     private static final File dumpsDir = new File(System.getProperty("user.home") + File.separator + "IQCare-Companion" + File.separator + "Dumps");
     private static final File logsDir = new File(System.getProperty("user.home") + File.separator + "IQCare-Companion" + File.separator + "Logs");
 
-    public static void createRuntimeDir() throws IOException {
-        if (!logsDir.exists()) {
-            boolean isCreated = logsDir.mkdirs();
+    public static void createRuntimeDirs(){
+        try {
+            createRuntimeDir(logsDir, "log files");
+            createRuntimeDir(dumpsDir, "hl7 files");
+        } catch (IOException ex) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(LOG_PREFIX)
+                    .append(" An error occurred during the creation of the runtime directories:\n");
+            logger.log(Level.SEVERE,sb.toString(),ex);
+        }
+    }
+     
+    private static void createRuntimeDir(File dir, String usage) throws IOException {
+        if (!dir.exists()) {
+            boolean isCreated = dir.mkdirs();
             if(isCreated == true){
             logger.log(Level.INFO,
-                    "{0} Created the folder {1} to be used for the log files",
-                    new Object[]{LOG_PREFIX, logsDir.getCanonicalPath()});
+                    "{0} Created the folder {1} to be used for the {2}",
+                    new Object[]{LOG_PREFIX, dir.getCanonicalPath(), usage});
             } else {
              logger.log(Level.INFO,
-                    "{0} Unable to create the folder {1} for the log files",
-                    new Object[]{LOG_PREFIX, logsDir.getCanonicalPath()});   
+                    "{0} Unable to create the folder {1} for the {2}",
+                    new Object[]{LOG_PREFIX, dir.getCanonicalPath(), usage});   
             }
         } else {
             logger.log(Level.INFO,
-                    "The log files are stored at {0}", logsDir.getCanonicalPath());
-        }
-        if (!dumpsDir.exists()) {
-            boolean isCreated = dumpsDir.mkdirs();
-            if(isCreated == true){
-                logger.log(Level.INFO,
-                    "{0} Created the folder {1} to be used for the hl7 backups",
-                    new Object[]{LOG_PREFIX, dumpsDir.getCanonicalPath()});
-            } else {
-                logger.log(Level.INFO,
-                    "{0} Unable to create the folder {1} for the hl7 backups",
-                    new Object[]{LOG_PREFIX, dumpsDir.getCanonicalPath()});
-            }
-        } else {
-            logger.log(Level.INFO,
-                "{0} The hl7 dump files are stored at {1}",
-                new Object[]{LOG_PREFIX, dumpsDir.getCanonicalPath()});
+                    "The {0} are stored at {1}", 
+                    new Object[]{usage, dir.getCanonicalPath()});
         }
     }
 
