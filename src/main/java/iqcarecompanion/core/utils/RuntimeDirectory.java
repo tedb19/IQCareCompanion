@@ -46,8 +46,8 @@ public class RuntimeDirectory {
             }
         } else {
             logger.log(Level.INFO,
-                    "The {0} are stored at {1}", 
-                    new Object[]{usage, dir.getCanonicalPath()});
+                    "{0} The {1} are stored at {2}", 
+                    new Object[]{LOG_PREFIX, usage, dir.getCanonicalPath()});
         }
     }
 

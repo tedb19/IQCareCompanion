@@ -101,7 +101,10 @@ public class ObservationFactory {
                 try {
                     preparedStatement.close();
                 } catch (SQLException ex) {
-                    logger.log(Level.SEVERE, "The following issue is preventing the preparedStatement from closing:\n", ex);
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(LOG_PREFIX)
+                            .append("The following issue is preventing the preparedStatement from closing:\n");
+                    logger.log(Level.SEVERE, sb.toString() , ex);
                 }
             }
         }

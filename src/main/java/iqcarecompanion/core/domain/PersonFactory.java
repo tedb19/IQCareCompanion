@@ -4,7 +4,6 @@ import iqcarecompanion.core.utils.ConstantProperties;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
 import iqcarecompanion.core.utils.ResultsetToList;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -174,7 +173,10 @@ public class PersonFactory {
                 try {
                     preparedStatement.close();
                 } catch (SQLException ex) {
-                    logger.log(Level.SEVERE, "The following issue is preventing the preparedStatement from closing:\n", ex);
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(LOG_PREFIX)
+                            .append("The following issue is preventing the preparedStatement from closing:\n");
+                    logger.log(Level.SEVERE, sb.toString() , ex);
                 }
             }
         }

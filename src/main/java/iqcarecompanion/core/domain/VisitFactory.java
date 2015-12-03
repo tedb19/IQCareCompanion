@@ -3,6 +3,7 @@ package iqcarecompanion.core.domain;
 
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
 import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
@@ -29,8 +30,11 @@ public class VisitFactory {
         PreparedStatement preparedStatement = null;
         ResultSet rs;
         
-        String sql = "SELECT * FROM " + ConstantProperties.DB_NAME + ".dbo.ord_Visit as visit WHERE visit.Visit_Id = ?";
-
+        StringBuilder sbSql = new StringBuilder();
+        sbSql.append("SELECT * FROM ")
+                .append(DB_NAME)
+                .append(".dbo.ord_Visit as visit WHERE visit.Visit_Id = ?");
+        String sql = sbSql.toString();
         try {
             dbConnection = DBConnector.connectionInstance();
             preparedStatement = dbConnection.prepareStatement(sql);
@@ -67,11 +71,15 @@ public class VisitFactory {
         int final_visit_id = 0;
         final String LAST_VISIT_ID_RECORDED = "last_visit_id";//the key in the properties file
         
-        String sql = "SELECT top " + limit + " Visit_Id,Ptn_Pk,VisitDate FROM " + ConstantProperties.DB_NAME;
-        sql += ".dbo.ord_Visit as visits WHERE ";
-        sql += " visits.Visit_Id > ?";
-        sql += "order by Visit_Id asc ";
-
+        StringBuilder sbSql = new StringBuilder();
+        sbSql.append("SELECT top ")
+                .append(limit)
+                .append(" Visit_Id,Ptn_Pk,VisitDate FROM ")
+                .append(DB_NAME)
+                .append(".dbo.ord_Visit as visits WHERE ")
+                .append(" visits.Visit_Id > ?")
+                .append("order by Visit_Id asc ");
+        String sql = sbSql.toString();
         try {
             dbConnection = DBConnector.connectionInstance();
             preparedStatement = dbConnection.prepareStatement(sql);
@@ -99,7 +107,10 @@ public class VisitFactory {
                 try {
                     preparedStatement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(VisitFactory.class.getName()).log(Level.SEVERE, null, ex);
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(LOG_PREFIX)
+                            .append("The following issue is preventing the preparedStatement from closing:\n");
+                    logger.log(Level.SEVERE, sb.toString(), ex);
                 }
             }
         }
