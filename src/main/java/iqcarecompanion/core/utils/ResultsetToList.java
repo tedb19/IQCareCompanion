@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author Teddy
+ * @author Teddy Odhiambo
  */
 public class ResultsetToList {
     /*
