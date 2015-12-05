@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.kemricdc.constants.IdentifierType;
-import org.kemricdc.constants.MaritalStatus;
-import org.kemricdc.entities.Person;
-import org.kemricdc.entities.PersonIdentifier;
+import hapimodule.core.constants.IdentifierType;
+import hapimodule.core.constants.MaritalStatus;
+import hapimodule.core.entities.Person;
+import hapimodule.core.entities.PersonIdentifier;
 
 /**
  *

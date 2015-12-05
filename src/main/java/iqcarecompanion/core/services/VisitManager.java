@@ -9,8 +9,8 @@ import iqcarecompanion.core.jsonMapper.Event;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.kemricdc.entities.Person;
-import org.kemricdc.hapi.oru.OruFiller;
+import hapimodule.core.entities.Person;
+import hapimodule.core.hapi.models.OBXModel;
 
 /**
  *
@@ -31,7 +31,7 @@ public class VisitManager {
 
     private static void generateVisitHl7(Visit visit, List<Event> events) {
         if (visit != null) {
-            List<OruFiller> fillers = new ArrayList<>();
+            List<OBXModel> fillers = new ArrayList<>();
             Person person;
             Observation observation;
             person = getPerson(visit.getPatientId());
@@ -39,7 +39,7 @@ public class VisitManager {
                 for (Event event : events) {
                     observation = getObservation(event, visit);
                     if (observation != null && observation.getClass() == Observation.class) {
-                        OruFiller filler = HAPIWrappers.createOBX(observation.getObservationName(),
+                        OBXModel filler = HAPIWrappers.createOBX(observation.getObservationName(),
                                 observation.getObservationValue(),
                                 visit.getVisitDate());
                         if (filler != null) {
@@ -49,7 +49,7 @@ public class VisitManager {
                 }
             }
             if (!fillers.isEmpty() && person != null) {
-                HAPIWrappers.generateORUMsg(fillers, person);
+                HAPIWrappers.generateORUMsg(person, null, fillers);
             }
         }
 
