@@ -6,6 +6,7 @@ import iqcarecompanion.core.entities.Observation;
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.jsonMapper.Event;
 import iqcarecompanion.core.utils.ConstantProperties;
+import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
 import iqcarecompanion.core.utils.DateUtil;
@@ -33,11 +34,11 @@ public class ObservationFactory {
         ResultSet rs;
         String sql;
         String observationValue = "";
-        Date eventDate;
+        Date eventDate = null;
         StringBuilder sbSql = new StringBuilder();
-        if (StringUtils.equals(event.visitIdColumn, "")) {
+        if (StringUtils.isEmpty(event.visitIdColumn)) {
             sbSql.append("SELECT * FROM ")
-                    .append(ConstantProperties.DB_NAME)
+                    .append(DB_NAME)
                     .append(".dbo.")
                     .append(event.tableName)
                     .append(" where Ptn_pk = ")
@@ -45,7 +46,7 @@ public class ObservationFactory {
             
         } else {
             sbSql.append("SELECT * FROM ")
-                    .append(ConstantProperties.DB_NAME)
+                    .append(DB_NAME)
                     .append(".dbo.")
                     .append(event.tableName)
                     .append(" where ")
@@ -67,8 +68,11 @@ public class ObservationFactory {
                 observation.setObservationDate(DateUtil.parseDate(visit.getVisitDate()));
                 observation.setObservationName(event.eventName);
                 String datatype = event.eventValueDataType;
-                eventDate = rs.getDate(event.eventDateColumn);
+                if(StringUtils.isNotEmpty(event.eventDateColumn)){
+                        eventDate = rs.getDate(event.eventDateColumn);
+                }
                 if (rs.getObject(event.eventValueColumn) != null) {
+                    
                     switch (datatype) {
                         case "INT":
                             observationValue = Integer.toString(rs.getInt(event.eventValueColumn));
@@ -86,9 +90,8 @@ public class ObservationFactory {
                             observationValue = (rs.getBigDecimal(event.eventValueColumn)).toString();
                             break;
                     }
+                    observation = setTransformations(observation, observationValue, event, eventDate, visit);
                 }
-                
-                observation = setTransformations(observation, observationValue, event, eventDate, visit);
             }
         } catch (SQLException ex) {
             StringBuilder sb = new StringBuilder();
@@ -121,36 +124,32 @@ public class ObservationFactory {
     *   Look at the events.txt file to have a better understanding
     */
     private static Observation setTransformations(Observation observation, String observationValue, Event event, Date eventDate, Visit visit){
-        if (!StringUtils.isEmpty(observationValue)) {
-            int totalTransformations = event.transformations.length;
+        int totalTransformations = event.transformations.length;
 
-            if (totalTransformations > 0) {
+        if (totalTransformations > 0) {
 
-                String[] splitTransformer;
-                for (String transformation : event.transformations) {
-                    if (totalTransformations == 1) {
-                        if (observationValue.equals(transformation)) {
-                            observation.setObservationValue(DateUtil.parseDate(eventDate));
-                        }
-                    } else {
-                        splitTransformer = transformation.split(":");
-                        String key = splitTransformer[0];
-                        String value = splitTransformer[1];
-                        if (observationValue.equalsIgnoreCase(key)) {
-                            if (StringUtils.equals(event.eventName, "FIRST_LINE_REGIMEN") || StringUtils.equals(event.eventName, "SECOND_LINE_REGIMEN")) {
-                                String regimen = getCurrentRegimen(visit.getVisitId());
-                                observation.setObservationValue(regimen);
-                            } else {
-                                observation.setObservationValue(value);
-                            }
+            String[] splitTransformer;
+            for (String transformation : event.transformations) {
+                if (totalTransformations == 1) {
+                    if (observationValue.equals(transformation)) {
+                        observation.setObservationValue(DateUtil.parseDate(eventDate));
+                    }
+                } else {
+                    splitTransformer = transformation.split(":");
+                    String key = splitTransformer[0];
+                    String value = splitTransformer[1];
+                    if (observationValue.equalsIgnoreCase(key)) {
+                        if (StringUtils.equals(event.eventName, "FIRST_LINE_REGIMEN") || StringUtils.equals(event.eventName, "SECOND_LINE_REGIMEN")) {
+                            String regimen = getCurrentRegimen(visit.getVisitId());
+                            observation.setObservationValue(regimen);
+                        } else {
+                            observation.setObservationValue(value);
                         }
                     }
                 }
-            } else {
-                observation.setObservationValue(observationValue);
             }
         } else {
-            observation = null;
+            observation.setObservationValue(observationValue);
         }
         return observation;
     }

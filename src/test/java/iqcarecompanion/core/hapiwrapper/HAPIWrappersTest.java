@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.kemricdc.hapi.oru.OruFiller;
+import hapimodule.core.hapi.models.OBXModel;
 
 /**
  *
@@ -32,17 +32,17 @@ public class HAPIWrappersTest {
     }
 
     @Test
-    public void testCreateOBXReturnsValidORUFiller() {
-        OruFiller filler = HAPIWrappers.createOBX(eventName, eventValue, new Date());
-        assertThat(filler, instanceOf(OruFiller.class));
-        assertThat(eventName, is(filler.getObservationIdentifierText()));
-        assertThat(eventValue, is(filler.getObservationValue()));
+    public void testCreateOBXReturnsValidOBXModel() {
+        OBXModel obxModel = HAPIWrappers.createOBX(eventName, eventValue, new Date());
+        assertThat(obxModel, instanceOf(OBXModel.class));
+        assertThat(eventName, is(obxModel.getObservationIdentifierText()));
+        assertThat(eventValue, is(obxModel.getObservationValue()));
     }
     
     @Test
     public void testCreateOBXReturnsNullForNullInputs(){
-        OruFiller filler = HAPIWrappers.createOBX(null, null, null);
-        assertNull("ORUFiller object was not null for null inputs", filler);
+        OBXModel obxModel = HAPIWrappers.createOBX(null, null, null);
+        assertNull("ORUFiller object was not null for null inputs", obxModel);
     }
     
 }

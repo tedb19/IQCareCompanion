@@ -21,7 +21,7 @@ public class Main {
         
         while(true){
             ObservationManager.mineEvents();
-            LabManager.generateLabResultsORU();
+            //LabManager.generateLabResultsORU();
         }
     }
     

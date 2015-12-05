@@ -8,8 +8,8 @@ import static iqcarecompanion.core.utils.PropertiesManager.readConfigFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.kemricdc.entities.Person;
-import org.kemricdc.hapi.oru.OruFiller;
+import hapimodule.core.entities.Person;
+import hapimodule.core.hapi.models.OBXModel;
 
 /**
  *
@@ -30,10 +30,10 @@ public class LabManager {
             for (LabResult labResult : labResults) {
                 if (labResult != null) {
                     Person person = getPerson(labResult.getVisit().getPatientId());
-                    OruFiller filler = HAPIWrappers.createOBX(labResult.getLabTest().getValue(), labResult.getResult(), labResult.getVisit().getVisitDate());
-                    List<OruFiller> fillers = new ArrayList<>();
+                    OBXModel filler = HAPIWrappers.createOBX(labResult.getLabTest().getValue(), labResult.getResult(), labResult.getVisit().getVisitDate());
+                    List<OBXModel> fillers = new ArrayList<>();
                     fillers.add(filler);
-                    HAPIWrappers.generateORUMsg(fillers, person);
+                    HAPIWrappers.generateORUMsg(person, null, fillers);
                 }
             }
         }  
