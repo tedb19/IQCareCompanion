@@ -99,6 +99,14 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+        
+        <!--Maven plugin for submitting Java code coverage reports to Coveralls web service.-->
+        <dependency>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
 
 
     </dependencies>
