@@ -5,7 +5,6 @@ import static iqcarecompanion.core.domain.RegimenFactory.getCurrentRegimen;
 import iqcarecompanion.core.entities.Observation;
 import iqcarecompanion.core.entities.Visit;
 import iqcarecompanion.core.jsonMapper.Event;
-import iqcarecompanion.core.utils.ConstantProperties;
 import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
