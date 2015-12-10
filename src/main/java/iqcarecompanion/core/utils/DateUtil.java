@@ -10,9 +10,12 @@ import java.util.Date;
  */
 public class DateUtil {
 
+    private DateUtil(){
+        throw new UnsupportedOperationException("This operation is forbidden!");
+    }
+    
     public static String parseDate(Date date) {
         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
-        String startDate = ft.format(date);
-        return startDate;
+        return ft.format(date);
     }  
 }

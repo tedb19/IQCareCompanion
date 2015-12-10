@@ -1,5 +1,9 @@
-package iqcarecompanion.core.domain;
+package iqcarecompanion.core.dao;
 
+import hapimodule.core.constants.IdentifierType;
+import hapimodule.core.constants.MaritalStatus;
+import hapimodule.core.entities.Person;
+import hapimodule.core.entities.PersonIdentifier;
 import iqcarecompanion.core.utils.ConstantProperties;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import iqcarecompanion.core.utils.DBConnector;
@@ -12,31 +16,34 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import hapimodule.core.constants.IdentifierType;
-import hapimodule.core.constants.MaritalStatus;
-import hapimodule.core.entities.Person;
-import hapimodule.core.entities.PersonIdentifier;
 
 /**
  *
  * @author Teddy Odhiambo
  */
-public class PersonFactory {
-
-    final static Logger logger = Logger.getLogger(PersonFactory.class.getName());
+public class PersonDao {
+    
+    private static final Logger LOGGER = Logger.getLogger(PersonDao.class.getName());
+    
+    private PersonDao(){
+    }
 
     public static Person getPerson(int id) {
 
         Person person = new Person();
+        String ancNumberColumn = "ANCNumber";
+        String pmtctNumberColumn = "PMTCTNumber";
+        String idPassportNoColumn = "[ID/PassportNo]";
 
         List rs = getPatient(id);
 
         if (rs != null && !rs.isEmpty()) {
             for (Object o : rs) {
-                HashMap rc = (HashMap) o;
+                Map rc = (HashMap) o;
 
                 person.setFirstName((String) rc.get("firstname_decrypted"));
                 person.setMiddleName((String) rc.get("middlename_decrypted"));
@@ -88,33 +95,33 @@ public class PersonFactory {
                 }
 
                 Set<PersonIdentifier> identifiers = new HashSet<>();
-                PersonIdentifier pid_number = new PersonIdentifier();
-                pid_number.setIdentifier(rc.get("Ptn_Pk").toString());
-                pid_number.setIdentifierType(IdentifierType.PID_NUMBER);
-                identifiers.add(pid_number);
+                PersonIdentifier pidNumber = new PersonIdentifier();
+                pidNumber.setIdentifier(rc.get("Ptn_Pk").toString());
+                pidNumber.setIdentifierType(IdentifierType.PID_NUMBER);
+                identifiers.add(pidNumber);
 
                 PersonIdentifier pi = new PersonIdentifier();
                 pi.setIdentifier((String) rc.get("IQNumber"));
                 pi.setIdentifierType(IdentifierType.CCC_NUMBER);
                 identifiers.add(pi);
 
-                if ((String) rc.get("ANCNumber") != null && !((String) rc.get("ANCNumber")).equals("")) {
+                if ((String) rc.get(ancNumberColumn) != null && !"".equals((String) rc.get(ancNumberColumn))) {
                     pi = new PersonIdentifier();
-                    pi.setIdentifier((String) rc.get("ANCNumber"));
+                    pi.setIdentifier((String) rc.get(ancNumberColumn));
                     pi.setIdentifierType(IdentifierType.ANC_NUMBER);
                     identifiers.add(pi);
                 }
 
-                if ((String) rc.get("PMTCTNumber") != null && !((String) rc.get("PMTCTNumber")).equals("")) {
+                if ((String) rc.get(pmtctNumberColumn) != null && !"".equals((String) rc.get(pmtctNumberColumn))) {
                     pi = new PersonIdentifier();
-                    pi.setIdentifier((String) rc.get("PMTCTNumber"));
+                    pi.setIdentifier((String) rc.get(pmtctNumberColumn));
                     pi.setIdentifierType(IdentifierType.PMTCT_NUMBER);
                     identifiers.add(pi);
                 }
 
-                if ((String) rc.get("[ID/PassportNo]") != null && !((String) rc.get("[ID/PassportNo]")).equals("")) {
+                if ((String) rc.get(idPassportNoColumn) != null && !"".equals((String) rc.get(idPassportNoColumn))) {
                     pi = new PersonIdentifier();
-                    pi.setIdentifier((String) rc.get("[ID/PassportNo]"));
+                    pi.setIdentifier((String) rc.get(idPassportNoColumn));
                     pi.setIdentifierType(IdentifierType.NATIONAL_ID);
                     identifiers.add(pi);
                 }
@@ -128,7 +135,7 @@ public class PersonFactory {
         return person;
     }
 
-    private static List getPatient(int primary_key) {
+    private static List getPatient(int primaryKey) {
 
         Connection dbConnection;
         PreparedStatement preparedStatement = null;
@@ -154,7 +161,7 @@ public class PersonFactory {
 
             preparedStatement = dbConnection.prepareStatement(sql,
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            preparedStatement.setInt(1, primary_key);
+            preparedStatement.setInt(1, primaryKey);
 
             rs = preparedStatement.executeQuery();
 
@@ -165,7 +172,7 @@ public class PersonFactory {
             sb.append(LOG_PREFIX)
                     .append(" An error occurred during the execution of the following query:\n")
                     .append(sql);
-            logger.log(Level.SEVERE,sb.toString(),e);
+            LOGGER.log(Level.SEVERE,sb.toString(),e);
 
         } finally {
 
@@ -176,7 +183,7 @@ public class PersonFactory {
                     StringBuilder sb = new StringBuilder();
                     sb.append(LOG_PREFIX)
                             .append("The following issue is preventing the preparedStatement from closing:\n");
-                    logger.log(Level.SEVERE, sb.toString() , ex);
+                    LOGGER.log(Level.SEVERE, sb.toString() , ex);
                 }
             }
         }

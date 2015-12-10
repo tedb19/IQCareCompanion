@@ -1,15 +1,13 @@
 
 package iqcarecompanion.core.utils;
 
-import iqcarecompanion.core.jsonMapper.Event;
+import iqcarecompanion.core.jsonmapper.Event;
 import static iqcarecompanion.core.utils.ConstantProperties.SENTINEL_EVENTS;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.Matchers.isIn;
-import org.junit.After;
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -17,26 +15,15 @@ import org.junit.Test;
  * @author Teddy Odhiambo
  */
 public class ResourceManagerTest {
-    private List<Event> events;
-
-    @Before
-    public void setUp() throws IOException {
-        events = SENTINEL_EVENTS;
-    }
-    
-    @After
-    public void tearDown() {
-        events.clear();
-    }
 
     @Test
     public void testReadJSONFile() throws IOException {
-        assertNotNull(events);
+        assertNotNull(SENTINEL_EVENTS);
     }
     
     @Test
     public void testMandatoryEventFields(){
-        for(Event event:events){
+        for(Event event:SENTINEL_EVENTS){
             assertNotNull(event.eventName);
             assertNotNull(event.tableName); 
             assertNotNull(event.eventValueColumn);
@@ -54,7 +41,7 @@ public class ResourceManagerTest {
         validDataTypes.add("DATE");
         validDataTypes.add("DOUBLE");
         validDataTypes.add("DECIMAL");
-        for(Event event:events){
+        for(Event event:SENTINEL_EVENTS){
             assertThat(event.eventValueDataType, isIn(validDataTypes));
         }
     }    

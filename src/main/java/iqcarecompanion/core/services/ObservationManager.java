@@ -1,12 +1,12 @@
 package iqcarecompanion.core.services;
 
-import static iqcarecompanion.core.domain.VisitFactory.getVisits;
+import iqcarecompanion.core.dao.VisitDao;
 import iqcarecompanion.core.entities.Visit;
 import static iqcarecompanion.core.services.VisitManager.generateVisitHl7s;
 import static iqcarecompanion.core.utils.ConstantProperties.SENTINEL_EVENTS;
+import static iqcarecompanion.core.utils.DBConnector.connectionInstance;
 import static iqcarecompanion.core.utils.PropertiesManager.readConfigFile;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  *
@@ -14,13 +14,17 @@ import java.util.logging.Logger;
  */
 public class ObservationManager {
 
-    final static Logger logger = Logger.getLogger(ObservationManager.class.getName());
-    final static String LAST_VISIT_ID_KEY = "last_visit_id";
-    final static int TOTAL_VISITS = 100;
+    private static final String LAST_VISIT_ID_KEY = "last_visit_id";
+    private static final int TOTAL_VISITS = 100;
+    
+    private ObservationManager(){
+        throw new UnsupportedOperationException("This operation is forbidden!");
+    }
     
     public static void mineEvents() {
+        VisitDao dao = new VisitDao(connectionInstance());
         String lastVisitId = readConfigFile(LAST_VISIT_ID_KEY);
-        List<Visit> visits = getVisits(TOTAL_VISITS, lastVisitId);
+        List<Visit> visits = dao.getVisits(TOTAL_VISITS, lastVisitId);
         generateVisitHl7s(visits, SENTINEL_EVENTS);
     }
 }

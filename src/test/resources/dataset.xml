@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <dtl_RegimenMap RegimenType="D4T/3TC/NVP" Visit_Pk="123"/>
+  <dtl_RegimenMap RegimenType="3TC/NVP/AZT" Visit_Pk="124"/>
+</dataset>

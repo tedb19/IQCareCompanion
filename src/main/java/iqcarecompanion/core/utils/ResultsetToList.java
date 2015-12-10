@@ -6,12 +6,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Teddy Odhiambo
  */
 public class ResultsetToList {
+    
+    //Hide the implicit public constructor
+    private ResultsetToList(){
+        throw new UnsupportedOperationException("This operation is forbidden!");
+    }
     /*
     * Pass in a resultset, and get back a list of hashmaps.
     * This is important when you are not sure which fields will
@@ -20,13 +26,13 @@ public class ResultsetToList {
     public static List<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException{
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
-        ArrayList<HashMap<String, Object>> list = new ArrayList<>(50);
+        List<HashMap<String, Object>> list = new ArrayList<>(50);
         while (rs.next()){
-           HashMap<String, Object> row = new HashMap<>(columns);
+           Map<String, Object> row = new HashMap<>(columns);
            for(int i=1; i<=columns; ++i){           
                row.put(md.getColumnName(i),rs.getObject(i));
            }
-           list.add(row);
+           list.add((HashMap<String, Object>) row);
         }
        return list;
     }

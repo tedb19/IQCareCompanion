@@ -1,21 +1,23 @@
 package iqcarecompanion.core.utils;
 
-import iqcarecompanion.core.jsonMapper.Event;
+import hapimodule.core.hapi.models.MSHSegment;
+import iqcarecompanion.core.jsonmapper.Event;
 import static iqcarecompanion.core.utils.PropertiesManager.getProperties;
+import java.io.File;
 import java.util.List;
 
 /**
  *
  * @author Teddy Odhiambo
  */
-public class ConstantProperties extends PropertiesManager {
+public final class ConstantProperties extends PropertiesManager {
     /*
-    * A collection of all the variables read from the properties file and the json file
-    * whose values don't change at runtime
-    */
+     * A collection of all the variables read from the properties file and the json file
+     * whose values don't change at runtime.
+     */
     public static final String DB_DRIVER = getProperties().getProperty("db_driver");
     public static final String DB_PASSWORD = getProperties().getProperty("db_password");
-    public static final String windowsAuthentication = getProperties().getProperty("windowsAuthentication");
+    public static final String WINDOWS_AUTHENTICATION = getProperties().getProperty("windowsAuthentication");
     public static final String HOST = getProperties().getProperty("host");
     public static final String INSTANCE = getProperties().getProperty("instance");
     public static final String PORT = getProperties().getProperty("port");
@@ -31,5 +33,20 @@ public class ConstantProperties extends PropertiesManager {
     public static final String CDS_APPLICATION_NAME = getProperties().getProperty("cdsapplication_name");
     public static final String LOG_PREFIX = "(" + FACILITY_NAME + ":"+ APPLICATION_NAME + ")";
     public static final List<Event> SENTINEL_EVENTS = ResourceManager.readJSONFile();
+    public static final MSHSegment MSH = new MSHSegment(APPLICATION_NAME, FACILITY_NAME, MFL_CODE, CDS_NAME, CDS_APPLICATION_NAME);
+    public static final File DUMPS_DIR = new File(
+            new StringBuilder().append(System.getProperty("user.home"))
+                    .append(File.separator)
+                    .append("IQCare-Companion")
+                    .append(File.separator)
+                    .append("Dumps").toString()
+    );
+    public static final File LOGS_DIR = new File(
+            new StringBuilder().append(System.getProperty("user.home"))
+                    .append(File.separator)
+                    .append("IQCare-Companion")
+                    .append(File.separator)
+                    .append("Logs").toString()
+    );
     
 }
