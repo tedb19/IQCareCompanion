@@ -2,7 +2,7 @@ package iqcarecompanion.core.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import iqcarecompanion.core.jsonMapper.Event;
+import iqcarecompanion.core.jsonmapper.Event;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,15 +20,20 @@ import java.util.logging.Logger;
  */
 public class ResourceManager extends PropertiesManager {
 
-    final static Logger resourceMngrlogger = Logger.getLogger(ResourceManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ResourceManager.class.getName());
+    private static final String JSON_FILE = "events.txt";
     private static List<Event> events;
-    private static final String jsonFile = "events.txt";
+    
+    //Hide the implicit public constructor
+    private ResourceManager(){
+        throw new UnsupportedOperationException("This operation is forbidden!");
+    }
     
     public static List<Event> readJSONFile(){
         if(events == null){
             try {
 
-                byte[] jsonData = Files.readAllBytes(Paths.get(confPath + jsonFile));
+                byte[] jsonData = Files.readAllBytes(Paths.get(CONF_PATH + JSON_FILE));
                 ObjectMapper mapper = new ObjectMapper();
                 events = mapper.readValue(jsonData, new TypeReference<List<Event>>() {
                 });
@@ -37,7 +42,7 @@ public class ResourceManager extends PropertiesManager {
                 StringBuilder sb = new StringBuilder();
                 sb.append(LOG_PREFIX)
                         .append(" An error occurred while reading the json file:\n");
-                logger.log(Level.SEVERE,sb.toString(),ex);
+                LOGGER.log(Level.SEVERE,sb.toString(),ex);
             }
         }
         return events;
@@ -46,7 +51,7 @@ public class ResourceManager extends PropertiesManager {
     public static void updateLastId(int finalId, String key) {
         if (finalId != 0) {
             modifyConfigFile(key, Integer.toString(finalId));
-            resourceMngrlogger.log(Level.INFO, "{0} {1} successfully updated to {2} in runtime.properties",
+            LOGGER.log(Level.INFO, "{0} {1} successfully updated to {2} in runtime.properties",
                     new Object[]{LOG_PREFIX, key, finalId});
         }
     }
@@ -59,14 +64,14 @@ public class ResourceManager extends PropertiesManager {
             for(Handler handler : handlers) {
                 globalLogger.removeHandler(handler);
             }
-            String propFileLocation = confPath + "logger.properties";
+            String propFileLocation = CONF_PATH + "logger.properties";
             fis = new FileInputStream(propFileLocation);
             LogManager.getLogManager().readConfiguration(fis);
         } catch (IOException ex) {
             StringBuilder sb = new StringBuilder();
             sb.append(LOG_PREFIX)
                     .append(" An error occurred while reading the iqcarecompanion properties:\n");
-            logger.log(Level.SEVERE,sb.toString(),ex);
+            LOGGER.log(Level.SEVERE,sb.toString(),ex);
         } finally {
             if(fis != null){
                 try {
@@ -75,7 +80,7 @@ public class ResourceManager extends PropertiesManager {
                     StringBuilder sb = new StringBuilder();
                     sb.append(LOG_PREFIX)
                             .append(" The following issue is preventing the FileInputStream from closing:\n");
-                    logger.log(Level.SEVERE,sb.toString(),ex);
+                    LOGGER.log(Level.SEVERE,sb.toString(),ex);
                 }
             }
         }

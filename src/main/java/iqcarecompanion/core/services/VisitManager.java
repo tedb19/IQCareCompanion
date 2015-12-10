@@ -1,16 +1,20 @@
 package iqcarecompanion.core.services;
 
-import static iqcarecompanion.core.domain.ObservationFactory.getObservation;
-import static iqcarecompanion.core.domain.PersonFactory.getPerson;
+import hapimodule.core.entities.Person;
+import hapimodule.core.hapi.ORUProcessor;
+import hapimodule.core.hapi.models.OBXSegment;
+import hapimodule.core.utils.Hl7Dump;
+import iqcarecompanion.core.dao.ObservationDao;
+import static iqcarecompanion.core.dao.PersonDao.getPerson;
 import iqcarecompanion.core.entities.Observation;
 import iqcarecompanion.core.entities.Visit;
-import iqcarecompanion.core.hapiwrapper.HAPIWrappers;
-import iqcarecompanion.core.jsonMapper.Event;
+import iqcarecompanion.core.jsonmapper.Event;
+import static iqcarecompanion.core.utils.ConstantProperties.DUMPS_DIR;
+import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
+import static iqcarecompanion.core.utils.ConstantProperties.MSH;
+import static iqcarecompanion.core.utils.DBConnector.connectionInstance;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-import hapimodule.core.entities.Person;
-import hapimodule.core.hapi.models.OBXModel;
 
 /**
  *
@@ -18,8 +22,10 @@ import hapimodule.core.hapi.models.OBXModel;
  */
 public class VisitManager {
 
-    final static Logger logger = Logger.getLogger(VisitManager.class.getName());
-
+    private VisitManager(){
+        throw new UnsupportedOperationException("This operation is forbidden!");
+    }
+    
     public static void generateVisitHl7s(List<Visit> visits, List<Event> events) {
 
         if (!visits.isEmpty()) {
@@ -30,28 +36,36 @@ public class VisitManager {
     }
 
     private static void generateVisitHl7(Visit visit, List<Event> events) {
-        if (visit != null) {
-            List<OBXModel> fillers = new ArrayList<>();
-            Person person;
-            Observation observation;
-            person = getPerson(visit.getPatientId());
-            if (person != null) {
-                for (Event event : events) {
-                    observation = getObservation(event, visit);
-                    if (observation != null && observation.getClass() == Observation.class) {
-                        OBXModel filler = HAPIWrappers.createOBX(observation.getObservationName(),
-                                observation.getObservationValue(),
-                                visit.getVisitDate());
-                        if (filler != null) {
-                            fillers.add(filler);
-                        }
-                    }
-                }
-            }
-            if (!fillers.isEmpty() && person != null) {
-                HAPIWrappers.generateORUMsg(person, null, fillers);
-            }
+        ObservationDao dao = new ObservationDao(connectionInstance());
+        if (visit == null) {
+            return;
         }
-
+        List<OBXSegment> obxSegments = new ArrayList<>();
+        Person person;
+        Observation observation;
+        person = getPerson(visit.getPatientId());
+        if (person == null) {
+            return;
+        }
+        for (Event event : events) {
+            observation = dao.getObservation(event, visit);
+            if (observation == null) {
+                continue;
+            }
+            OBXSegment obxSegment = new OBXSegment(
+                    observation.getObservationName(), 
+                    observation.getObservationValue(),
+                    visit.getVisitDate()
+            );
+            obxSegments.add(obxSegment);
+        }
+        
+        ORUProcessor oruProcessor = new ORUProcessor(
+                    person,
+                    obxSegments,
+                    MSH
+        );
+        Hl7Dump.dumpORU(oruProcessor, LOG_PREFIX, DUMPS_DIR);
     }
 }
+

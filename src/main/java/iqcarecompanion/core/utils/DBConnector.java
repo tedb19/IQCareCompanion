@@ -7,7 +7,7 @@ import static iqcarecompanion.core.utils.ConstantProperties.HOST;
 import static iqcarecompanion.core.utils.ConstantProperties.INSTANCE;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import static iqcarecompanion.core.utils.ConstantProperties.PORT;
-import static iqcarecompanion.core.utils.ConstantProperties.windowsAuthentication;
+import static iqcarecompanion.core.utils.ConstantProperties.WINDOWS_AUTHENTICATION;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -20,12 +20,14 @@ import java.util.logging.Logger;
  */
 public class DBConnector {
 
-    final static Logger logger = Logger.getLogger(DBConnector.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DBConnector.class.getName());
     private static Connection dbConnection;
     private static String DB_CONNECTION = null;
     
-    private DBConnector() {}
-
+    private DBConnector(){
+        throw new UnsupportedOperationException("This operation is forbidden!");
+    }
+    
     public static Connection connectionInstance() {
         if (dbConnection == null) {
             try {
@@ -41,22 +43,22 @@ public class DBConnector {
                 DB_CONNECTION = sbDbCon.toString();
                 Class.forName(ConstantProperties.DB_DRIVER);
             } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e.toString()});
+                LOGGER.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
             }
 
             try {
 
-                if (windowsAuthentication.equals("true")) {
+                if ("true".equals(WINDOWS_AUTHENTICATION)) {
                     dbConnection = DriverManager.getConnection(
                             DB_CONNECTION);
-                    logger.log(Level.INFO,
+                    LOGGER.log(Level.INFO,
                             "{0} Connection to IQCare database established. Using Windows Authentication.\n{1}",
                             new Object[]{LOG_PREFIX, DB_CONNECTION});
-
+                    
                 } else {
                     dbConnection = DriverManager.getConnection(
                             DB_CONNECTION, DB_USER, DB_PASSWORD);
-                    logger.log(Level.INFO,
+                    LOGGER.log(Level.INFO,
                             "{0} Connection to IQCare database established. Using SQL Server Authentication.\n{1}",
                             new Object[]{LOG_PREFIX, DB_CONNECTION});
                 }
@@ -66,7 +68,7 @@ public class DBConnector {
                 StringBuilder sb = new StringBuilder();
                 sb.append(LOG_PREFIX)
                         .append(" An error occurred while creating the Connection instance:\n");
-            logger.log(Level.SEVERE,sb.toString(),e);
+            LOGGER.log(Level.SEVERE,sb.toString(),e);
             }
 
             return dbConnection;

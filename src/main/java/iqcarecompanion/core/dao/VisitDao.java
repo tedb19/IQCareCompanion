@@ -1,11 +1,9 @@
 
-package iqcarecompanion.core.domain;
+package iqcarecompanion.core.dao;
 
 import iqcarecompanion.core.entities.Visit;
-import iqcarecompanion.core.utils.ConstantProperties;
 import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
-import iqcarecompanion.core.utils.DBConnector;
 import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,13 +18,18 @@ import java.util.logging.Logger;
  *
  * @author Teddy Odhiambo
  */
-public class VisitFactory {
+public class VisitDao {
     
-    final static Logger logger = Logger.getLogger(VisitFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(VisitDao.class.getName());
+    private static final String LAST_VISIT_ID_RECORDED = "last_visit_id";//the key in the properties file
+    private final Connection connection;
+    
+    public VisitDao(Connection connection){
+        this.connection = connection;
+    }
    
-    public static Visit getVisit(int visit_id) throws SQLException {
+    public Visit getVisit(int visitId) throws SQLException {
         Visit visit = null;
-        Connection dbConnection;
         PreparedStatement preparedStatement = null;
         ResultSet rs;
         
@@ -36,9 +39,8 @@ public class VisitFactory {
                 .append(".dbo.ord_Visit as visit WHERE visit.Visit_Id = ?");
         String sql = sbSql.toString();
         try {
-            dbConnection = DBConnector.connectionInstance();
-            preparedStatement = dbConnection.prepareStatement(sql);
-            preparedStatement.setInt(1, visit_id);
+            preparedStatement = this.connection.prepareStatement(sql);
+            preparedStatement.setInt(1, visitId);
             rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 visit = new Visit();
@@ -52,7 +54,7 @@ public class VisitFactory {
             sb.append(LOG_PREFIX)
                     .append(" An error occurred during the execution of the following query:\n")
                     .append(sql);
-            logger.log(Level.SEVERE,sb.toString(),e);
+            LOGGER.log(Level.SEVERE,sb.toString(),e);
         } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
@@ -62,14 +64,13 @@ public class VisitFactory {
         return visit;
     }
 
-    public static List<Visit> getVisits(int limit, String lastVisitId) {
+    public List<Visit> getVisits(int limit, String lastVisitId) {
         List<Visit> visits = new ArrayList<>();
         Visit visit;
-        Connection dbConnection;
         PreparedStatement preparedStatement = null;
         ResultSet rs;
-        int final_visit_id = 0;
-        final String LAST_VISIT_ID_RECORDED = "last_visit_id";//the key in the properties file
+        int finalVisitId = 0;
+        
         
         StringBuilder sbSql = new StringBuilder();
         sbSql.append("SELECT top ")
@@ -81,8 +82,7 @@ public class VisitFactory {
                 .append("order by Visit_Id asc ");
         String sql = sbSql.toString();
         try {
-            dbConnection = DBConnector.connectionInstance();
-            preparedStatement = dbConnection.prepareStatement(sql);
+            preparedStatement = this.connection.prepareStatement(sql);
             preparedStatement.setString(1, lastVisitId);
             rs = preparedStatement.executeQuery();
             while (rs.next()) {
@@ -93,7 +93,7 @@ public class VisitFactory {
                 visits.add(visit);
 
                 if (rs.isLast()) {
-                    final_visit_id = visit.getVisitId();
+                    finalVisitId = visit.getVisitId();
                 }
             }
         } catch (SQLException e) {
@@ -101,7 +101,7 @@ public class VisitFactory {
             sb.append(LOG_PREFIX)
                     .append(" An error occurred during the execution of the following query:\n")
                     .append(sql);
-            logger.log(Level.SEVERE,sb.toString(),e);
+            LOGGER.log(Level.SEVERE,sb.toString(),e);
         } finally {
             if (preparedStatement != null) {
                 try {
@@ -110,11 +110,11 @@ public class VisitFactory {
                     StringBuilder sb = new StringBuilder();
                     sb.append(LOG_PREFIX)
                             .append("The following issue is preventing the preparedStatement from closing:\n");
-                    logger.log(Level.SEVERE, sb.toString(), ex);
+                    LOGGER.log(Level.SEVERE, sb.toString(), ex);
                 }
             }
         }
-        updateLastId(final_visit_id, LAST_VISIT_ID_RECORDED);
+        updateLastId(finalVisitId, LAST_VISIT_ID_RECORDED);
 
         return visits;
     }
