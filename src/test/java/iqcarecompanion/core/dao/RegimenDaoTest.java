@@ -18,6 +18,7 @@ import org.dbunit.operation.DatabaseOperation;
 import static org.h2.engine.Constants.UTF8;
 import org.h2.tools.RunScript;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -27,7 +28,9 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  *
@@ -101,4 +104,16 @@ public class RegimenDaoTest {
         String regimen = dao.getCurrentRegimen(111,"");
         assertThat(regimen, is(allOf(not(nullValue()),instanceOf(String.class), is(""))));
     }
+    
+    @Rule
+    public ExpectedException thrown = ExpectedException.none(); 
+    
+    @Test
+    public void GetCurrentRegimen_InvalidParams_SQLExceptionThrown() throws SQLException {
+        thrown.expect(SQLException.class);
+        thrown.expectMessage("Syntax error in SQL statement");
+        dao.getCurrentRegimen(111,"zzz");
+    }
+    
+    
 }

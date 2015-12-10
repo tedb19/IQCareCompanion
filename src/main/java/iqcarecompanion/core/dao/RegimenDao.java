@@ -25,7 +25,7 @@ public class RegimenDao {
         this.connection = connection;
     }
 
-    public String getCurrentRegimen(int visitId, String dbName) {
+    public String getCurrentRegimen(int visitId, String dbName) throws SQLException {
 
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -37,19 +37,13 @@ public class RegimenDao {
         sbSql.append(" SELECT DISTINCT RegimenType")
                 .append(" FROM ").append("dtl_RegimenMap WHERE Visit_Pk = ")
                 .append(visitId).append(";");
-        try{
-            preparedStatement = this.connection.prepareStatement(sbSql.toString());
-            rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                regimenType = rs.getString("RegimenType");
-            }
-        } catch (SQLException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(LOG_PREFIX)
-                    .append(" An error occurred during the execution of the following query:\n")
-                    .append(sbSql);
-            LOGGER.log(Level.SEVERE,sb.toString(),e);
+
+        preparedStatement = this.connection.prepareStatement(sbSql.toString());
+        rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            regimenType = rs.getString("RegimenType");
         }
+        
         return regimenType;
     }
 }
