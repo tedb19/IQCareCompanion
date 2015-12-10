@@ -167,7 +167,12 @@ public class ObservationDao {
         if (StringUtils.equals(event.eventName, "FIRST_LINE_REGIMEN") ||
                 StringUtils.equals(event.eventName, "SECOND_LINE_REGIMEN")) {
             RegimenDao regimenDao = new RegimenDao(this.connection);
-            String regimen = regimenDao.getCurrentRegimen(visit.getVisitId(), DB_NAME);
+            String regimen = null;
+            try {
+                regimen = regimenDao.getCurrentRegimen(visit.getVisitId(), DB_NAME);
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "An error occurred during the execution of the following query:" , ex);
+            }
             observation.setObservationValue(regimen);
         }
         return observation;
