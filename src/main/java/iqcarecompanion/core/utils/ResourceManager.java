@@ -13,6 +13,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  *
@@ -49,7 +50,7 @@ public class ResourceManager extends PropertiesManager {
     }
 
     public static void updateLastId(int finalId, String key) {
-        if (finalId != 0) {
+        if (finalId != 0 && StringUtils.isNotEmpty(key)) {
             modifyConfigFile(key, Integer.toString(finalId));
             LOGGER.log(Level.INFO, "{0} {1} successfully updated to {2} in runtime.properties",
                     new Object[]{LOG_PREFIX, key, finalId});

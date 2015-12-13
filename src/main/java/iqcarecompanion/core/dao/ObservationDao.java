@@ -34,7 +34,7 @@ public class ObservationDao {
         PreparedStatement preparedStatement = null;
         ResultSet rs;
         String sql;
-        String observationValue = "";
+        String observationValue;
         Date eventDate = null;
         StringBuilder sbSql = new StringBuilder();
         if (StringUtils.isEmpty(event.visitIdColumn)) {
