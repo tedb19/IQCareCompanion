@@ -29,12 +29,7 @@ public class ObservationDao {
         this.connection = connection;
     }
     
-    public Observation getObservation(Event event, Visit visit) {
-        Observation observation = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet rs;
-        String sql;
-        String observationValue = "";
+    public Observation getObservation(Event event, Visit visit) throws SQLException {
         Date eventDate = null;
         StringBuilder sbSql = new StringBuilder();
         if (StringUtils.isEmpty(event.visitIdColumn)) {
@@ -55,50 +50,35 @@ public class ObservationDao {
                     .append(" = ")
                     .append(visit.getVisitId());
         }
-        sql = sbSql.toString();
+        String sql = sbSql.toString();
         
-        try {
-            preparedStatement = this.connection.prepareStatement(sql,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        PreparedStatement preparedStatement = this.connection.prepareStatement(sql,
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            rs = preparedStatement.executeQuery();
-            if (!rs.isBeforeFirst()) {
-                return null;
-            }
-            rs.first();
-            observation = new Observation();
-            observation.setObservationDate(DateUtil.parseDate(visit.getVisitDate()));
-            observation.setObservationName(event.eventName);
-            if(StringUtils.isNotEmpty(event.eventDateColumn)){
-                    eventDate = rs.getDate(event.eventDateColumn);
-            }
-            if (rs.getObject(event.eventValueColumn) == null) {
-                return null;
-            }
+        ResultSet rs = preparedStatement.executeQuery();
+        if (!rs.isBeforeFirst()) {
+            return null;
+        }
+        rs.first();
+        Observation observation = new Observation();
+        observation.setObservationDate(DateUtil.parseDate(visit.getVisitDate()));
+        observation.setObservationName(event.eventName);
+        if(StringUtils.isNotEmpty(event.eventDateColumn)){
+                eventDate = rs.getDate(event.eventDateColumn);
+        }
+        if (rs.getObject(event.eventValueColumn) == null) {
+            return null;
+        }
 
-            observationValue = setObservationValue(event.eventValueDataType, event.eventValueColumn, rs);
-            observation = setTransformations(
-                    observation,
-                    observationValue,
-                    event,
-                    eventDate,
-                    visit
-            );
-            
-            } catch (SQLException ex) {
-                Logger.getLogger(ObservationDao.class.getName()).log(Level.SEVERE, null, ex);
-            }  finally {
-                if (preparedStatement != null) {
-                    try {
-                        preparedStatement.close();
-                    } catch (SQLException ex) {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(LOG_PREFIX)
-                                .append("The following issue is preventing the preparedStatement from closing:\n");
-                        LOGGER.log(Level.SEVERE, sb.toString() , ex);
-                    }
-                }
-            }
+        String observationValue = setObservationValue(event.eventValueDataType, event.eventValueColumn, rs);
+        observation = setTransformations(
+                observation,
+                observationValue,
+                event,
+                eventDate,
+                visit
+        );
+        
         return observation;
     }
     

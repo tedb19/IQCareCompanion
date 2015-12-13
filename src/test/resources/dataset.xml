@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-  <dtl_RegimenMap RegimenType="D4T/3TC/NVP" Visit_Pk="123"/>
-  <dtl_RegimenMap RegimenType="3TC/NVP/AZT" Visit_Pk="124"/>
+  <ord_Visit Ptn_Pk="1" VisitDate="2015-08-20 14:45:18" Visit_Id="1"/>
+  <ord_Visit Ptn_Pk="2" VisitDate="2015-08-21 14:45:17" Visit_Id="2"/>
+  <ord_Visit Ptn_Pk="3" VisitDate="2015-08-21 14:45:18" Visit_Id="3"/>
+  
+  <dtl_RegimenMap RegimenType="D4T/3TC/NVP" Visit_Pk="1"/>
+  <dtl_RegimenMap RegimenType="3TC/NVP/AZT" Visit_Pk="2"/>
+  
+  <ord_PatientLabOrder LabID="1" Ptn_pk="1" VisitId="1"/>
+  <ord_PatientLabOrder LabID="2" Ptn_pk="2" VisitId="2"/>
+  <ord_PatientLabOrder LabID="4" Ptn_pk="3" VisitId="3"/>
+  
+  <dtl_PatientLabResults LabID="2" LabTestID="1" TestResults="200.00" CreateDate="2015-08-21 14:45:18.907"/>
+  <dtl_PatientLabResults LabID="1" LabTestID="5" TestResults="456.00" CreateDate="2015-08-20 14:45:18.907"/>
+  <dtl_PatientLabResults LabID="4" LabTestID="2" CreateDate="2015-08-20 14:45:18.907"/> <!-- TestResults omitted on this row to represent null -->
+  
 </dataset>

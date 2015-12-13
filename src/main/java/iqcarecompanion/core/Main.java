@@ -11,8 +11,7 @@ import static iqcarecompanion.core.utils.RuntimeDirectory.createRuntimeDirs;
  * @author Teddy Odhiambo
  */
 public class Main {
-     
-    //Hide the implicit public constructor
+
     private Main(){
         throw new UnsupportedOperationException("This operation is forbidden!");
     }
