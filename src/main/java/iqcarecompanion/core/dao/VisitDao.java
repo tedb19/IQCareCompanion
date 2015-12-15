@@ -18,12 +18,14 @@ import org.codehaus.plexus.util.StringUtils;
 public class VisitDao {
 
     private final Connection connection;
+    private final String dbName;
     
-    public VisitDao(Connection connection){
+    public VisitDao(Connection connection, String dbName){
         this.connection = connection;
+        this.dbName = dbName;
     }
    
-    public Visit getVisit(int visitId, String dbName) throws SQLException {
+    public Visit getVisit(int visitId) throws SQLException {
         Visit visit = null;
         StringBuilder sbSql = new StringBuilder();
         
@@ -45,7 +47,7 @@ public class VisitDao {
         return visit;
     }
 
-    public List<Visit> getVisits(int limit, String lastVisitId, String propertyKey, String dbName) throws SQLException {
+    public List<Visit> getVisits(int limit, String lastVisitId, String propertyKey) throws SQLException {
         List<Visit> visits = new ArrayList<>();
         int finalVisitId = 0;
         StringBuilder sbSql = new StringBuilder();

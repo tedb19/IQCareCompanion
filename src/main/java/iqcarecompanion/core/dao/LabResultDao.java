@@ -21,12 +21,14 @@ import org.apache.commons.lang.StringUtils;
 public class LabResultDao {
 
     private final Connection connection;
+    private final String dbName;
     
-    public LabResultDao(Connection connection){
+    public LabResultDao(Connection connection, String dbName){
         this.connection = connection;
+        this.dbName = dbName;
     }
 
-    public List<LabResult> getLabResults(int limit, String labResultId, String propertyKey, String dbName) throws SQLException {
+    public List<LabResult> getLabResults(int limit, String labResultId, String propertyKey) throws SQLException {
         List<LabResult> labResults = new ArrayList<>();
         StringBuilder sbSqlLabResults = new StringBuilder();
         int finalLabId = 0;
@@ -56,7 +58,7 @@ public class LabResultDao {
             labResult.setResult(rs.getBigDecimal("TestResults").toString());
             labResult.setResultDate(rs.getTimestamp("CreateDate"));
             int labID = rs.getInt("LabID");
-            labResult.setVisit(getLabOrderVisit(labID, dbName));
+            labResult.setVisit(getLabOrderVisit(labID));
             labResults.add(labResult);
             
             if (rs.isLast()) {
@@ -68,9 +70,9 @@ public class LabResultDao {
         return labResults;
     }
     
-    private Visit getLabOrderVisit(int labId, String dbName) throws SQLException{
+    private Visit getLabOrderVisit(int labId) throws SQLException{
         int visitId = 0;
-        VisitDao dao = new VisitDao(this.connection);
+        VisitDao dao = new VisitDao(this.connection, dbName);
         StringBuilder sbSql = new StringBuilder();
         if(StringUtils.isNotEmpty(dbName)){
             sbSql.append("USE ").append(dbName).append("\n");
@@ -84,7 +86,7 @@ public class LabResultDao {
         while (orderRs.next()) {
             visitId = orderRs.getInt("VisitId");
         }
-        return dao.getVisit(visitId, dbName);
+        return dao.getVisit(visitId);
     }
     
     public LabResult setLabTest(ResultSet rs, LabResult labResult) throws SQLException{

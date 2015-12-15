@@ -33,18 +33,18 @@ public class RegimenDaoTest extends AbstractDaoTest {
     @Before
     public void setUp() throws Exception {
         importDataSet();
-        dao = new RegimenDao(getConnection());
+        dao = new RegimenDao(getConnection(), "");
     }
     
     @Test
     public void GetCurrentRegimen_ExistingVisitIdParameter_RegimenReturned() throws Exception {
-        String regimen = dao.getCurrentRegimen(1,"");
+        String regimen = dao.getCurrentRegimen(1);
         assertThat(regimen, is(allOf(not(nullValue()),instanceOf(String.class), is("D4T/3TC/NVP"))));
     }
     
     @Test
     public void GetCurrentRegimen_NoneExistantVisitIdParameter_EmptyStringReturned() throws Exception {
-        String regimen = dao.getCurrentRegimen(11,"");
+        String regimen = dao.getCurrentRegimen(11);
         assertThat(regimen, is(allOf(not(nullValue()),instanceOf(String.class), is(""))));
     }
     
@@ -52,10 +52,11 @@ public class RegimenDaoTest extends AbstractDaoTest {
     public ExpectedException thrown = ExpectedException.none(); 
     
     @Test
-    public void GetCurrentRegimen_InvalidParams_SQLExceptionThrown() throws SQLException {
+    public void GetCurrentRegimen_InvalidParams_SQLExceptionThrown() throws SQLException, ClassNotFoundException {
         thrown.expect(SQLException.class);
         thrown.expectMessage("Syntax error in SQL statement");
-        dao.getCurrentRegimen(111,"zzz");
+        RegimenDao badDao = new RegimenDao(getConnection(), "zzz");
+        badDao.getCurrentRegimen(111);
     }
     
     

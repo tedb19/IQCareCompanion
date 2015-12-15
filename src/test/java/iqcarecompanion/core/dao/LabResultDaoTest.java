@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -42,13 +41,13 @@ public class LabResultDaoTest extends AbstractDaoTest{
     @Before
     public void setUp() throws Exception {
         importDataSet();
-        dao = new LabResultDao(getConnection());
+        dao = new LabResultDao(getConnection(), "");
         lastLabId = "0";
     }
     
     @Test
     public void GetLabResults_ValidParams_ListReturned() throws Exception {
-        List<LabResult> labResults = dao.getLabResults(5, lastLabId,"", "");
+        List<LabResult> labResults = dao.getLabResults(5, lastLabId,"");
         for(LabResult labResult:labResults){
             assertThat(labResult.getResult(), is("200.00"));
         }
@@ -57,19 +56,19 @@ public class LabResultDaoTest extends AbstractDaoTest{
     
     @Test
     public void GetLabResults_LastLabIdGreaterThanCurrentLabIdInDb_EmptyListReturned() throws Exception {
-        List<LabResult> labResults = dao.getLabResults(5, "7", "","");
+        List<LabResult> labResults = dao.getLabResults(5, "7", "noneExistentPropertyKey");
         assertTrue(labResults.isEmpty());
     }
     
     @Test
     public void GetLabResults_NoLabResult_EmptyListReturned() throws Exception {
-        List<LabResult> labResults = dao.getLabResults(5, "3", "","");
+        List<LabResult> labResults = dao.getLabResults(5, "3", "noneExistentPropertyKey");
         assertTrue(labResults.isEmpty());
     }
     
     @Test
     public void GetLabResults_NullLabResult_EmptyListReturned() throws Exception {
-        List<LabResult> labResults = dao.getLabResults(5, "7", "","");
+        List<LabResult> labResults = dao.getLabResults(5, "7", "noneExistentPropertyKey");
         assertTrue(labResults.isEmpty());
     }
     
@@ -77,10 +76,11 @@ public class LabResultDaoTest extends AbstractDaoTest{
     public ExpectedException thrown = ExpectedException.none(); 
     
     @Test
-    public void GetLabResults_InvalidParams_SQLExceptionThrown() throws SQLException {
+    public void GetLabResults_InvalidParams_SQLExceptionThrown() throws SQLException, ClassNotFoundException {
+        LabResultDao badDao = new LabResultDao(getConnection(), "invalidDBName");
         thrown.expect(SQLException.class);
         thrown.expectMessage("Syntax error in SQL statement");
-        dao.getLabResults(5,lastLabId, "","zzz");
+        badDao.getLabResults(5,lastLabId, "noneExistentPropertyKey");
     }
     
     @Test

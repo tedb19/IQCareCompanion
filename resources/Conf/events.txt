@@ -3,7 +3,6 @@
     "eventName": "WHO_STAGE",
     "tableName": "dtl_PatientStage",
     "eventValueColumn": "WHOStage",
-    "eventValueDataType": "INT",
     "eventDateColumn": "",
     "visitIdColumn": "Visit_Pk",
     "transformations": [
@@ -17,7 +16,6 @@
     "eventName": "FIRST_LINE_REGIMEN",
     "tableName": "ord_PatientPharmacyOrder",
     "eventValueColumn": "RegimenLine",
-    "eventValueDataType": "INT",
     "eventDateColumn": "",
     "visitIdColumn": "VisitID",
     "transformations": [
@@ -29,7 +27,6 @@
     "eventName": "SECOND_LINE_REGIMEN",
     "tableName": "ord_PatientPharmacyOrder",
     "eventValueColumn": "RegimenLine",
-    "eventValueDataType": "INT",
     "eventDateColumn": "",
     "visitIdColumn": "VisitID",
     "transformations": [
@@ -41,7 +38,6 @@
     "eventName": "TB_DIAGNOSIS",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "longTermTBStartDate",
-    "eventValueDataType": "DATE",
     "eventDateColumn": "",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -52,7 +48,6 @@
     "eventName": "CD4_COUNT",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "PrevARVsCD4",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "PrevARVsCD4Date",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -63,7 +58,6 @@
     "eventName": "HIV_DIAGNOSIS",
     "tableName": "dtl_PatientHivPrevCareEnrollment",
     "eventValueColumn": "FirstHIVPosTestDate",
-    "eventValueDataType": "DATE",
     "eventDateColumn": "",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -74,7 +68,6 @@
     "eventName": "ART_START",
     "tableName": "dtl_PatientHivPrevCareEnrollment",
     "eventValueColumn": "ARTStartDate",
-    "eventValueDataType": "DATE",
     "eventDateColumn": "",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -85,7 +78,6 @@
     "eventName": "CD4_PERCENT",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "PrevARVsCD4Percent",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "PrevARVsCD4Date",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -96,7 +88,6 @@
     "eventName": "CD4_COUNT",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "PrevMostRecentCD4",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "PrevMostRecentCD4Date",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -107,7 +98,6 @@
     "eventName": "CD4_PERCENT",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "PrevMostRecentCD4Percent",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "PrevMostRecentCD4Date",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -118,7 +108,6 @@
     "eventName": "VIRAL_LOAD",
     "tableName": "dtl_PatientHivPrevCareIE",
     "eventValueColumn": "PrevMostRecentViralLoad",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "PrevMostRecentViralLoadDate",
     "visitIdColumn": "Visit_pk",
     "transformations": [
@@ -129,7 +118,6 @@
     "eventName": "HIV_CARE_INITIATION",
     "tableName": "Lnk_PatientProgramStart",
     "eventValueColumn": "ModuleId",
-    "eventValueDataType": "INT",
     "eventDateColumn": "StartDate",
     "visitIdColumn": "",
     "transformations": [
@@ -140,7 +128,6 @@
     "eventName": "PMTCT_INITIATION",
     "tableName": "Lnk_PatientProgramStart",
     "eventValueColumn": "ModuleId",
-    "eventValueDataType": "INT",
     "eventDateColumn": "StartDate",
     "visitIdColumn": "",
     "transformations": [
@@ -151,7 +138,6 @@
     "eventName": "DECEASED",
     "tableName": "dtl_PatientCareEnded",
     "eventValueColumn": "PatientExitReason",
-    "eventValueDataType": "INT",
     "eventDateColumn": "DeathDate",
     "visitIdColumn": "",
     "transformations": [
@@ -162,8 +148,7 @@
     "eventName": "LOST_TO_FOLLOWUP",
     "tableName": "dtl_PatientCareEnded",
     "eventValueColumn": "PatientExitReason",
-    "eventValueDataType": "INT",
-    "eventDateColumn": "CreateDate",
+    "eventDateColumn": "CareEndedDate",
     "visitIdColumn": "",
     "transformations": [
       "91"
@@ -173,8 +158,7 @@
     "eventName": "TRANSFER_OUT",
     "tableName": "dtl_PatientCareEnded",
     "eventValueColumn": "PatientExitReason",
-    "eventValueDataType": "INT",
-    "eventDateColumn": "CreateDate",
+    "eventDateColumn": "CareEndedDate",
     "visitIdColumn": "",
     "transformations": [
       "118"
@@ -184,7 +168,6 @@
     "eventName": "CD4_COUNT",
     "tableName": "dtl_PatientARVEligibility",
     "eventValueColumn": "CD4",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "",
     "visitIdColumn": "visit_id",
     "transformations": [
@@ -195,7 +178,6 @@
     "eventName": "CD4_PERCENT",
     "tableName": "dtl_PatientARVEligibility",
     "eventValueColumn": "CD4percent",
-    "eventValueDataType": "DECIMAL",
     "eventDateColumn": "",
     "visitIdColumn": "visit_id",
     "transformations": [

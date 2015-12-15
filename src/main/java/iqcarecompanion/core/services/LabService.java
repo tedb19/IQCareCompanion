@@ -7,11 +7,9 @@ import hapimodule.core.utils.Hl7Dump;
 import iqcarecompanion.core.dao.LabResultDao;
 import iqcarecompanion.core.dao.PersonDao;
 import iqcarecompanion.core.entities.LabResult;
-import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
 import static iqcarecompanion.core.utils.ConstantProperties.DUMPS_DIR;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import static iqcarecompanion.core.utils.ConstantProperties.MSH;
-import static iqcarecompanion.core.utils.DBConnector.connectionInstance;
 import static iqcarecompanion.core.utils.PropertiesManager.readConfigFile;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,29 +21,29 @@ import java.util.logging.Logger;
  *
  * @author Teddy Odhiambo
  */
-public class LabManager {
+public class LabService {
     
     private static final int TOTAL_LAB_RESULTS = 100;
     private static final String LAB_RESULT_ID_KEY = "labResultId";
-    private static final Logger LOGGER = Logger.getLogger(LabManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LabService.class.getName());
+    private final LabResultDao labResultDao;
+    private final PersonDao personDao;
     
-    private LabManager(){
-        throw new UnsupportedOperationException("This operation is forbidden!");
+    public LabService(LabResultDao labResultDao, PersonDao personDao){
+        this.labResultDao = labResultDao;
+        this.personDao = personDao;
     }
     
-    public static void mineLabResults() {
+    public void mineLabResults() {
         Person person = null;
-        LabResultDao dao = new LabResultDao(connectionInstance());
-        PersonDao personDao = new PersonDao(connectionInstance());
         String labResultId = readConfigFile(LAB_RESULT_ID_KEY);
         List<LabResult> labResults = new ArrayList<>();
         
         try {
-            labResults = dao.getLabResults(
+            labResults = labResultDao.getLabResults(
                     TOTAL_LAB_RESULTS,
                     labResultId,
-                    LAB_RESULT_ID_KEY,
-                    DB_NAME
+                    LAB_RESULT_ID_KEY
             );
         } catch (SQLException ex) {
             StringBuilder sb = new StringBuilder();
