@@ -37,7 +37,7 @@ public class VisitDaoTest extends AbstractDaoTest{
     @Before
     public void setUp() throws Exception {
         importDataSet();
-        dao = new VisitDao(getConnection());
+        dao = new VisitDao(getConnection(),"");
     }
     
         
@@ -45,27 +45,28 @@ public class VisitDaoTest extends AbstractDaoTest{
     public ExpectedException thrown = ExpectedException.none(); 
     
     @Test
-    public void GetVisits_InvalidParams_SQLExceptionThrown() throws SQLException {
+    public void GetVisits_InvalidParams_SQLExceptionThrown() throws SQLException, ClassNotFoundException {
         thrown.expect(SQLException.class);
         thrown.expectMessage("Syntax error in SQL statement");
-        dao.getVisits(100, "0", "", "zzz");
+        VisitDao badDao = new VisitDao(getConnection(), "zzz");
+        badDao.getVisits(100, "0", "");
     }
     
     @Test 
     public void GetVisits_ValidParams_VisitsReturned() throws Exception {
-        List<Visit> visits = dao.getVisits(100, "0", "", "");
+        List<Visit> visits = dao.getVisits(100, "0", "");
         assertThat(visits.size(), is(3));
     }
     
     @Test 
     public void GetVisits_VisitIdGreaterThanCurrentVisitIdInDb_EmptyListReturned() throws Exception {
-        List<Visit> visits = dao.getVisits(6, "6","","");
+        List<Visit> visits = dao.getVisits(6, "6","");
         assertTrue(visits.isEmpty());
     }
     
     @Test 
     public void GetVisit_ValidParams_VisitReturned() throws Exception {
-        Visit visit = dao.getVisit(1, "");
+        Visit visit = dao.getVisit(1);
         assertThat(visit.getPatientId(), is(1));
         assertThat(visit.getVisitId(), is(1));
         assertThat(visit.getVisitDate(), is(not(nullValue())));
@@ -73,14 +74,15 @@ public class VisitDaoTest extends AbstractDaoTest{
     
     @Test 
     public void GetVisit_NonExistentVisitIdParams_NullReturned() throws Exception {
-        Visit visit = dao.getVisit(6, "");
+        Visit visit = dao.getVisit(6);
         assertThat(visit, is(nullValue()));
     }
     
     @Test
-    public void GetVisit_InvalidParams_SQLExceptionThrown() throws SQLException {
+    public void GetVisit_InvalidParams_SQLExceptionThrown() throws SQLException, ClassNotFoundException {
         thrown.expect(SQLException.class);
         thrown.expectMessage("Syntax error in SQL statement");
-        dao.getVisit(6, "zzz");
+        VisitDao badDao = new VisitDao(getConnection(), "zzz");
+        badDao.getVisit(6);
     }    
 }

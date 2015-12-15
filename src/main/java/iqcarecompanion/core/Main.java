@@ -1,8 +1,8 @@
 
 package iqcarecompanion.core;
 
-import iqcarecompanion.core.services.LabManager;
-import iqcarecompanion.core.services.ObservationManager;
+import iqcarecompanion.core.facade.LabFacade;
+import iqcarecompanion.core.facade.VisitFacade;
 import static iqcarecompanion.core.utils.ResourceManager.setLoggingProperties;
 import static iqcarecompanion.core.utils.RuntimeDirectory.createRuntimeDirs;
 
@@ -21,8 +21,8 @@ public class Main {
         setLoggingProperties();
         
         while(true){
-            ObservationManager.mineEvents();
-            LabManager.mineLabResults();
+            VisitFacade.mineEvents();
+            LabFacade.mineLabEvents();
         }
     }
     

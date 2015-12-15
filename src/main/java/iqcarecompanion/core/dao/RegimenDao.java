@@ -14,12 +14,14 @@ import org.codehaus.plexus.util.StringUtils;
 public class RegimenDao {
 
     private final Connection connection;
+    private final  String dbName;
     
-    public RegimenDao(Connection connection){
+    public RegimenDao(Connection connection, String dbName){
         this.connection = connection;
+        this.dbName = dbName;
     }
 
-    public String getCurrentRegimen(int visitId, String dbName) throws SQLException {
+    public String getCurrentRegimen(int visitId) throws SQLException {
 
         String regimenType = "";
         StringBuilder sbSql = new StringBuilder();

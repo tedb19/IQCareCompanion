@@ -27,22 +27,9 @@ public class ResourceManagerTest {
             assertNotNull(event.eventName);
             assertNotNull(event.tableName); 
             assertNotNull(event.eventValueColumn);
-            assertNotNull(event.eventValueDataType);
             assertNotNull(event.tableName);
             assertNotNull(event.visitIdColumn);
         }
     }
-    
-    @Test
-    public void testValidDataTypesSupplied(){
-        List<String> validDataTypes = new ArrayList<>();
-        validDataTypes.add("INT");
-        validDataTypes.add("STRING");
-        validDataTypes.add("DATE");
-        validDataTypes.add("DOUBLE");
-        validDataTypes.add("DECIMAL");
-        for(Event event:SENTINEL_EVENTS){
-            assertThat(event.eventValueDataType, isIn(validDataTypes));
-        }
-    }    
+        
 }
