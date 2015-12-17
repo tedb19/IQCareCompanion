@@ -4,9 +4,6 @@ package iqcarecompanion.core.utils;
 import iqcarecompanion.core.jsonmapper.Event;
 import static iqcarecompanion.core.utils.ConstantProperties.SENTINEL_EVENTS;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

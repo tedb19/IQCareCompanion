@@ -5,6 +5,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
@@ -18,6 +19,7 @@ import org.h2.tools.RunScript;
  * @author Teddy Odhiambo
  */
 public class AbstractDaoTest {
+    protected static final Logger dbUnit = Logger.getLogger("org.dbunit");
     private static final String JDBC_DRIVER = org.h2.Driver.class.getName();
     private static final String JDBC_URL = "jdbc:h2:mem:IQCare;DB_CLOSE_DELAY=-1";
     private static final String USER = "sa";
