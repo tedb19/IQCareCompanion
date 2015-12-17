@@ -6,9 +6,11 @@
 
 package iqcarecompanion.core.dao;
 
+import static iqcarecompanion.core.dao.AbstractDaoTest.dbUnit;
 import iqcarecompanion.core.entities.Visit;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -21,7 +23,7 @@ import org.junit.rules.ExpectedException;
 
 /**
  *
- * @author Ted
+ * @author Teddy Odhiambo
  */
 public class VisitDaoTest extends AbstractDaoTest{
     
@@ -31,6 +33,7 @@ public class VisitDaoTest extends AbstractDaoTest{
     
     @BeforeClass
     public static void setUpClass() throws Exception {
+        dbUnit.setLevel(Level.SEVERE);
         createSchema();
     }
     
@@ -46,6 +49,7 @@ public class VisitDaoTest extends AbstractDaoTest{
     
     @Test
     public void GetVisits_InvalidParams_SQLExceptionThrown() throws SQLException, ClassNotFoundException {
+        
         thrown.expect(SQLException.class);
         thrown.expectMessage("Syntax error in SQL statement");
         VisitDao badDao = new VisitDao(getConnection(), "zzz");
