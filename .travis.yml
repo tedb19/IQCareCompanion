@@ -1,5 +1,5 @@
 language: java
 before_install:
-  - mvn clean install -DskipTests
+  - mvn clean install -DskipTests -q
 after_success:
-  - mvn clean test jacoco:report coveralls:report
+  - mvn clean test jacoco:report coveralls:report -q
