@@ -24,7 +24,6 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <powermock.version>1.6.2</powermock.version>
         <sonar.language>java</sonar.language>
-	<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
     </properties>
     <dependencies>
         <dependency>
@@ -159,29 +158,6 @@
                 </executions>
             </plugin>
             <!-- https://github.com/asciidoctor/asciidoctor/wiki/Coveralls.io-configuration-for-maven-projects -->
-            
-           <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.1.0</version>
-                <configuration>
-                    <repoToken>lIWmugaNgr2YxOtyHr6fWXYW4UKBJwmvA</repoToken>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
-                <executions>
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             
         </plugins>
     </build>

@@ -9,7 +9,8 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    private DateUtil(){}
+    private DateUtil(){
+    }
     
     public static String parseDate(Date date) {
         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");

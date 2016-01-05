@@ -26,7 +26,8 @@ public class ResourceManager extends PropertiesManager {
     private static List<Event> events;
     
     //Hide the implicit public constructor
-    private ResourceManager(){}
+    private ResourceManager(){
+    }
     
     public static List<Event> readJSONFile(){
         if(events == null){

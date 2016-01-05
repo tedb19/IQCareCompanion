@@ -15,7 +15,8 @@ public class RuntimeDirectory {
     private static final Logger LOGGER = Logger.getLogger(RuntimeDirectory.class.getName());
 
     //Hide the implicit public constructor
-    private RuntimeDirectory(){}
+    private RuntimeDirectory(){
+    }
     
     public static void createRuntimeDir(File dir, String usage) throws IOException {
         if (!dir.exists()) {
