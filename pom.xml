@@ -96,7 +96,6 @@
             <version>1.3</version>
         </dependency>
 
-       
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
@@ -131,14 +130,6 @@
             <version>2.4.9</version>
         </dependency>
         <!-- END: Specific to setting up in-memory tests for db-specific tests -->
-        
-        <!-- BEGIN: Specific to MS SQL Server -->
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-        </dependency>
-        <!-- END: Specific to MS SQL Server -->
         
     </dependencies>
     
@@ -212,6 +203,5 @@
     </profile>
   </profiles>
   <!-- END: Specific to mapping unit tests and covered code -->
-    
 
 </project>

@@ -75,7 +75,7 @@ public class PersonDao {
                     break;
             }
 
-            int maritalStatus = (rs.getInt("MaritalStatus") != 0 ? rs.getInt("MaritalStatus") : 45);
+            int maritalStatus = rs.getInt("MaritalStatus") != 0 ? rs.getInt("MaritalStatus") : 45;
 
             switch (maritalStatus) {
                 case 42:

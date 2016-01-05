@@ -69,12 +69,5 @@ public class ResourceManagerTest {
       constructor.setAccessible(true);
       constructor.newInstance();
     }
-    
-    @Test
-    public void SetLoggingProperties_LoggingPropertiesSet() throws Exception{
-      ResourceManager.setLoggingProperties();
-      Logger globalLogger = Logger.getLogger("global");
-      assertThat(globalLogger.getHandlers().length, is(equalTo(0)));
-    }
         
 }
