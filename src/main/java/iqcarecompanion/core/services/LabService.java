@@ -53,14 +53,12 @@ public class LabService {
                     .append(labResultId);
             LOGGER.log(Level.SEVERE, sb.toString() , ex);
         }
-
+        labResults.remove(null);
         if (labResults.isEmpty()) {
             return;
         }
+        
         for (LabResult labResult : labResults) {
-            if (labResult == null) {
-                continue;
-            }
             try {
                 person = personDao.getPerson(labResult.getVisit().getPatientId());
                 if (person == null) {
