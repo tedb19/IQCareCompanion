@@ -21,7 +21,8 @@ public class DBConnector {
     private static final Logger LOGGER = Logger.getLogger(DBConnector.class.getName());
     private static Connection dbConnection;
     
-    private DBConnector(){}
+    private DBConnector(){
+    }
     
     public static Connection connectionInstance() {
         if (dbConnection == null) {
