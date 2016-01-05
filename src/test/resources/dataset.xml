@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
+  <mst_Patient firstname_decrypted="Teddy" middlename_decrypted="Brian"
+               lastname_decrypted="Odhiambo" Ptn_Pk="1" DOB="1989-08-21 14:45:18.907"
+               CreateDate="2015-08-21 14:45:18" Sex="16" MaritalStatus="42"
+               IQNumber="IQ-13456" PMTCTNumber="PMTCT-09876"
+  />
+  
   <ord_Visit Ptn_Pk="1" VisitDate="2015-08-20 14:45:18" Visit_Id="1"/>
   <ord_Visit Ptn_Pk="2" VisitDate="2015-08-21 14:45:17" Visit_Id="2"/>
   <ord_Visit Ptn_Pk="3" VisitDate="2015-08-21 14:45:18" Visit_Id="3"/>
@@ -15,4 +21,11 @@
   <dtl_PatientLabResults LabID="1" LabTestID="5" TestResults="456.00" CreateDate="2015-08-20 14:45:18.907"/>
   <dtl_PatientLabResults LabID="4" LabTestID="2" CreateDate="2015-08-20 14:45:18.907"/> <!-- TestResults omitted on this row to represent null -->
   
+  <dtl_PatientStage WHOStageID="1" WHOStage="89" Visit_Pk="2"/>
+  <dtl_PatientStage WHOStageID="2" Visit_Pk="3"/> <!-- WHOStage omitted on this row to represent null -->
+  
+  <dtl_PatientHivPrevCareIE TBDiagnosisID="1" longTermTBStartDate="2006-01-07 00:00:00.000" Visit_pk="2"/>
+  
+  <Lnk_PatientProgramStart ProgramStartID="1" Ptn_pk="2" ModuleId="2" StartDate="2005-01-07 00:00:00.000"/>
+
 </dataset>

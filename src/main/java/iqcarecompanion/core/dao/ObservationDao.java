@@ -21,6 +21,7 @@ public class ObservationDao {
 
     private final Connection connection;
     private final String dbName;
+    
     public ObservationDao(Connection connection, String dbName){
         this.connection = connection;
         this.dbName = dbName;

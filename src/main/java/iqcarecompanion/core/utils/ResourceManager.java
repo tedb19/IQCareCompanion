@@ -26,19 +26,15 @@ public class ResourceManager extends PropertiesManager {
     private static List<Event> events;
     
     //Hide the implicit public constructor
-    private ResourceManager(){
-        throw new UnsupportedOperationException("This operation is forbidden!");
-    }
+    private ResourceManager(){}
     
     public static List<Event> readJSONFile(){
         if(events == null){
             try {
-
                 byte[] jsonData = Files.readAllBytes(Paths.get(CONF_PATH + JSON_FILE));
                 ObjectMapper mapper = new ObjectMapper();
                 events = mapper.readValue(jsonData, new TypeReference<List<Event>>() {
                 });
-                return events;
             } catch (IOException ex) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(LOG_PREFIX)

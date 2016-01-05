@@ -11,7 +11,6 @@ import iqcarecompanion.core.entities.LabTest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
@@ -36,14 +35,11 @@ public class LabResultDaoTest extends AbstractDaoTest{
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-        dbUnit.setLevel(Level.SEVERE);
-        createSchema();
+        prepareDb();
     }
     
     @Before
     public void setUp() throws Exception {
-        dbUnit.setLevel(Level.SEVERE);
-        importDataSet();
         dao = new LabResultDao(getConnection(), "");
         lastLabId = "0";
     }
