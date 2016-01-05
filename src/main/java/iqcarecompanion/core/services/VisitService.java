@@ -97,6 +97,9 @@ public class VisitService {
         Hl7Dump.dumpORU(oruProcessor, LOG_PREFIX, DUMPS_DIR);
     }
     
+    /*
+     * Check if this is a regimen-specific event, then get the current regimen
+     */
     private static Observation checkRegimenEvent(Event event, Observation observation){
         if (StringUtils.equals(event.eventName, "FIRST_LINE_REGIMEN") ||
                 StringUtils.equals(event.eventName, "SECOND_LINE_REGIMEN")) {

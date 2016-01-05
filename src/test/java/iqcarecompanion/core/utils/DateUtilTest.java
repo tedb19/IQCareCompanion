@@ -40,13 +40,13 @@ public class DateUtilTest {
         String expectedValue = "20121124113212";
         assertThat(expectedValue, is(result));
     }
-    
+          
     @Test
-    public void DateUtil_ConstructorIsPrivate(){
-        final Constructor<?>[] constructors = DateUtil.class.getDeclaredConstructors();
-        for (Constructor<?> constructor : constructors) {
-            assertTrue(Modifier.isPrivate(constructor.getModifiers()));
-        }
+    public void testConstructorIsPrivate() throws Exception {
+      Constructor constructor = DateUtil.class.getDeclaredConstructor();
+      assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+      constructor.setAccessible(true);
+      constructor.newInstance();
     }
 
 }

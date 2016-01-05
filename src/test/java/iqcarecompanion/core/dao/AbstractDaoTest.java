@@ -3,8 +3,8 @@ package iqcarecompanion.core.dao;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
@@ -12,6 +12,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import static org.h2.engine.Constants.UTF8;
+import org.h2.jdbcx.JdbcDataSource;
 import org.h2.tools.RunScript;
 
 /**
@@ -26,21 +27,26 @@ public class AbstractDaoTest {
     private static final String PASSWORD = "";
     private static final String RESOURCES_PATH = "src/test/resources/";
     
+    public static void prepareDb() throws Exception{
+        dbUnit.setLevel(Level.SEVERE);
+        createSchema();
+        importDataSet();
+    }
+    
     public static void createSchema() throws Exception{
         RunScript.execute(JDBC_URL, USER,PASSWORD,
                           RESOURCES_PATH+"schema.sql",
                           UTF8, false);
     }
-    public void importDataSet() throws Exception {
-	IDataSet dataSet = readDataSet();
-	cleanlyInsertDataset(dataSet);
+    public static void importDataSet() throws Exception {
+	cleanlyInsertDataset(readDataSet());
     }
     
-    private IDataSet readDataSet() throws Exception {
+    private static IDataSet readDataSet() throws Exception {
 	return new FlatXmlDataSetBuilder().build(new File(RESOURCES_PATH + "dataset.xml"));
     }
     
-    private void cleanlyInsertDataset(IDataSet dataSet) throws Exception {
+    private static void cleanlyInsertDataset(IDataSet dataSet) throws Exception {
 	IDatabaseTester databaseTester = new JdbcDatabaseTester(JDBC_DRIVER, JDBC_URL, USER, PASSWORD);
 	databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
 	databaseTester.setDataSet(dataSet);
@@ -48,7 +54,10 @@ public class AbstractDaoTest {
     }
     
     public Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(JDBC_DRIVER);
-        return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL(JDBC_URL);
+        ds.setUser(USER);
+        ds.setPassword(PASSWORD);
+        return ds.getConnection();
     }
 }

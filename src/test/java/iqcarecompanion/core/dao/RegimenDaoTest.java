@@ -1,9 +1,7 @@
 
 package iqcarecompanion.core.dao;
 
-import static iqcarecompanion.core.dao.AbstractDaoTest.dbUnit;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -29,14 +27,11 @@ public class RegimenDaoTest extends AbstractDaoTest {
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-        dbUnit.setLevel(Level.SEVERE);
-        createSchema();
+        prepareDb();
     }
     
     @Before
     public void setUp() throws Exception {
-        dbUnit.setLevel(Level.SEVERE);
-        importDataSet();
         dao = new RegimenDao(getConnection(), "");
     }
     

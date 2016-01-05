@@ -6,6 +6,8 @@ import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,8 @@ public class VisitDao {
                 .append(" Visit_Id > ").append(lastVisitId)
                 .append("order by Visit_Id asc ");
         
-        PreparedStatement preparedStatement = this.connection.prepareStatement(sbSql.toString());
+        PreparedStatement preparedStatement = this.connection.prepareStatement(sbSql.toString(),
+                TYPE_SCROLL_INSENSITIVE, CONCUR_READ_ONLY);
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
             Visit visit = new Visit();

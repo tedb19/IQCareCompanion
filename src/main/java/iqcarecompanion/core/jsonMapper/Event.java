@@ -30,11 +30,6 @@ public final class Event {
         this.visitIdColumn = visitIdColumn;
         this.transformations = transformations;
     }
-
-    @Override
-    public String toString() {
-        return "Event{" + "eventName=" + eventName + ", tableName=" + tableName + ", eventValueColumn=" + eventValueColumn + ", eventDateColumn=" + eventDateColumn + ", visitIdColumn=" + visitIdColumn + ", transformations=" + Arrays.toString(transformations) + '}';
-    }
     
 }
 

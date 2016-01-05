@@ -15,11 +15,8 @@ public final class ConstantProperties extends PropertiesManager {
      * A collection of all the variables read from the properties file and the json file
      * whose values don't change at runtime.
      */
-    public static final String DB_DRIVER = getProperties().getProperty("db_driver");
     public static final String DB_PASSWORD = getProperties().getProperty("db_password");
-    public static final String WINDOWS_AUTHENTICATION = getProperties().getProperty("windowsAuthentication");
     public static final String HOST = getProperties().getProperty("host");
-    public static final String INSTANCE = getProperties().getProperty("instance");
     public static final String PORT = getProperties().getProperty("port");
     public static final String DB_USER = getProperties().getProperty("db_user");
     public static final String DB_NAME = getProperties().getProperty("db_name");

@@ -6,11 +6,9 @@
 
 package iqcarecompanion.core.dao;
 
-import static iqcarecompanion.core.dao.AbstractDaoTest.dbUnit;
 import iqcarecompanion.core.entities.Visit;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -33,13 +31,11 @@ public class VisitDaoTest extends AbstractDaoTest{
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-        dbUnit.setLevel(Level.SEVERE);
-        createSchema();
+        prepareDb();
     }
     
     @Before
     public void setUp() throws Exception {
-        importDataSet();
         dao = new VisitDao(getConnection(),"");
     }
     

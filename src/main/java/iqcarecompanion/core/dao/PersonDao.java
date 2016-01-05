@@ -30,7 +30,7 @@ public class PersonDao {
         this.dbName = dbName;
     }
 
-    public String getPersonRs(int primaryKey) throws SQLException{
+    public String getPersonSql(int primaryKey) throws SQLException{
         StringBuilder sbSql = new StringBuilder();
         sbSql.append("Declare @SymKey varchar(400)\n")
                 .append("USE ").append(dbName).append("\n")
@@ -49,7 +49,7 @@ public class PersonDao {
     
     public Person getPerson(int primaryKey) throws SQLException {
 
-        String sql = getPersonRs(primaryKey);
+        String sql = getPersonSql(primaryKey);
         Person person = null;
         PreparedStatement preparedStatement = this.connection.prepareStatement(sql,
                 TYPE_SCROLL_INSENSITIVE, CONCUR_READ_ONLY);
@@ -106,42 +106,35 @@ public class PersonDao {
                     break;
             }
 
+            //Add identifiers
+            PersonIdentifier pidNumber = setPersonIdentifier(IdentifierType.PID_NUMBER, Integer.toString(rs.getInt("Ptn_Pk")));
+            PersonIdentifier cccNumber = setPersonIdentifier(IdentifierType.CCC_NUMBER, rs.getString("IQNumber"));
+            PersonIdentifier ancNumber = setPersonIdentifier(IdentifierType.ANC_NUMBER, rs.getString("ANCNumber"));
+            PersonIdentifier pmtctNumber = setPersonIdentifier(IdentifierType.PMTCT_NUMBER, rs.getString("PMTCTNumber"));
+            PersonIdentifier nationalIDNumber = setPersonIdentifier(IdentifierType.NATIONAL_ID, rs.getString("ID/PassportNo"));
+            
             Set<PersonIdentifier> identifiers = new HashSet<>();
-            //Add the PID_NUMBER identifier
-            PersonIdentifier pidNumber = new PersonIdentifier();
-            pidNumber.setIdentifier(Integer.toString(rs.getInt("Ptn_Pk")));
-            pidNumber.setIdentifierType(IdentifierType.PID_NUMBER);
             identifiers.add(pidNumber);
-
-            //Add the CCC_NUMBER identifier
-            PersonIdentifier cccNumber = new PersonIdentifier();
-            cccNumber.setIdentifier(rs.getString("IQNumber"));
-            cccNumber.setIdentifierType(IdentifierType.CCC_NUMBER);
             identifiers.add(cccNumber);
-
-            if (StringUtils.isNotEmpty(rs.getString("ANCNumber"))) {
-                PersonIdentifier ancNumber = new PersonIdentifier();
-                ancNumber.setIdentifier(rs.getString("ANCNumber"));
-                ancNumber.setIdentifierType(IdentifierType.ANC_NUMBER);
-                identifiers.add(ancNumber);
-            }
-
-            if (StringUtils.isNotEmpty(rs.getString("PMTCTNumber"))) {
-                PersonIdentifier pmtctNumber = new PersonIdentifier();
-                pmtctNumber.setIdentifier(rs.getString("PMTCTNumber"));
-                pmtctNumber.setIdentifierType(IdentifierType.PMTCT_NUMBER);
-                identifiers.add(pmtctNumber);
-            }
-
-            if (StringUtils.isNotEmpty(rs.getString("ID/PassportNo"))) {
-                PersonIdentifier nationalIDNumber = new PersonIdentifier();
-                nationalIDNumber.setIdentifier(rs.getString("ID/PassportNo"));
-                nationalIDNumber.setIdentifierType(IdentifierType.NATIONAL_ID);
-                identifiers.add(nationalIDNumber);
-            }
+            identifiers.add(ancNumber);
+            identifiers.add(pmtctNumber);
+            identifiers.add(nationalIDNumber);
+           
+            //remove any null entry
+            identifiers.remove(null);
             person.setPersonIdentifiers(identifiers);
         }
 
         return person;
     }
+    
+    public PersonIdentifier setPersonIdentifier(IdentifierType identifierType, String identifierValue){
+        if(StringUtils.isEmpty(identifierValue)){
+            return null;
+        }
+        PersonIdentifier personIdentifier = new PersonIdentifier();
+        personIdentifier.setIdentifier(identifierValue);
+        personIdentifier.setIdentifierType(identifierType);
+        return personIdentifier;
+    } 
 }

@@ -46,7 +46,7 @@ public class VisitFacade {
             StringBuilder sb = new StringBuilder();
             sb.append(LOG_PREFIX)
                     .append("An error occurred while fetching the visits.")
-                    .append(" The last visit id as recorded on properties file is: {1}\n")
+                    .append(" The last visit id as recorded on properties file is: ")
                     .append(lastVisitId);
             LOGGER.log(Level.SEVERE, sb.toString() , ex);
         }

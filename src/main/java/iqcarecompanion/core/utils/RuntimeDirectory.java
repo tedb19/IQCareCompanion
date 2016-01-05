@@ -1,7 +1,5 @@
 package iqcarecompanion.core.utils;
 
-import static iqcarecompanion.core.utils.ConstantProperties.DUMPS_DIR;
-import static iqcarecompanion.core.utils.ConstantProperties.LOGS_DIR;
 import static iqcarecompanion.core.utils.ConstantProperties.LOG_PREFIX;
 import java.io.File;
 import java.io.IOException;
@@ -17,23 +15,9 @@ public class RuntimeDirectory {
     private static final Logger LOGGER = Logger.getLogger(RuntimeDirectory.class.getName());
 
     //Hide the implicit public constructor
-    private RuntimeDirectory(){
-        throw new UnsupportedOperationException("This operation is forbidden!");
-    }
+    private RuntimeDirectory(){}
     
-    public static void createRuntimeDirs(){
-        try {
-            createRuntimeDir(LOGS_DIR, "log files");
-            createRuntimeDir(DUMPS_DIR, "hl7 files");
-        } catch (IOException ex) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(LOG_PREFIX)
-                    .append(" An error occurred during the creation of the runtime directories:\n");
-            LOGGER.log(Level.SEVERE,sb.toString(),ex);
-        }
-    }
-     
-    private static void createRuntimeDir(File dir, String usage) throws IOException {
+    public static void createRuntimeDir(File dir, String usage) throws IOException {
         if (!dir.exists()) {
             boolean isCreated = dir.mkdirs();
             if(isCreated){

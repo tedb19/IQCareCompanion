@@ -9,6 +9,8 @@ import static iqcarecompanion.core.utils.ResourceManager.updateLastId;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +74,7 @@ public class LabResultDao {
     
     private Visit getLabOrderVisit(int labId) throws SQLException{
         int visitId = 0;
-        VisitDao dao = new VisitDao(this.connection, dbName);
+        VisitDao dao = new VisitDao(connection, dbName);
         StringBuilder sbSql = new StringBuilder();
         if(StringUtils.isNotEmpty(dbName)){
             sbSql.append("USE ").append(dbName).append("\n");
@@ -81,7 +83,11 @@ public class LabResultDao {
                 .append("ord_PatientLabOrder where LabID = ")
                 .append(labId);
 
-        PreparedStatement preparedStatement = this.connection.prepareStatement(sbSql.toString());
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                sbSql.toString(),
+                TYPE_SCROLL_INSENSITIVE,
+                CONCUR_READ_ONLY
+        );
         ResultSet orderRs = preparedStatement.executeQuery();
         while (orderRs.next()) {
             visitId = orderRs.getInt("VisitId");

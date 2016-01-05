@@ -6,11 +6,10 @@
 package iqcarecompanion.core.entities;
 
 import iqcarecompanion.core.jsonmapper.Event;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
- * @author Teddy
+ * @author Teddy Odhiambo
  */
 public class Observation {
     private String observationName;
