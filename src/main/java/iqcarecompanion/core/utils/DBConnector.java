@@ -1,7 +1,5 @@
 package iqcarecompanion.core.utils;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import static iqcarecompanion.core.utils.ConstantProperties.DB_NAME;
 import static iqcarecompanion.core.utils.ConstantProperties.DB_PASSWORD;
 import static iqcarecompanion.core.utils.ConstantProperties.DB_USER;
@@ -12,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sourceforge.jtds.jdbcx.JtdsDataSource;
 
 /**
  *
@@ -28,7 +27,7 @@ public class DBConnector {
         if (dbConnection == null) {
             try {
                 // Establish the connection. 
-                SQLServerDataSource ds = new SQLServerDataSource();
+                JtdsDataSource ds = new JtdsDataSource();
                 ds.setUser(DB_USER);
                 ds.setPassword(DB_PASSWORD);
                 ds.setServerName(HOST);
@@ -39,8 +38,6 @@ public class DBConnector {
                     "{0} Database connection established with the URL: {1}",
                     new Object[]{LOG_PREFIX, dbConnection.getMetaData().getURL()});
                 
-            } catch (SQLServerException e) {
-                LOGGER.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, "{0} {1}", new Object[]{LOG_PREFIX, e});
             }
