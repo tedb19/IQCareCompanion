@@ -38,7 +38,7 @@ public class Main {
         
         while(true){
             VisitFacade.mineEvents();
-            LabFacade.mineLabEvents();
+            //LabFacade.mineLabEvents();
         }
     }
     

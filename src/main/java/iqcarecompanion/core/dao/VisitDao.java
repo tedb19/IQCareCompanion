@@ -49,6 +49,30 @@ public class VisitDao {
         return visit;
     }
 
+    private int lastVisitId() throws SQLException {
+        StringBuilder sbSql = new StringBuilder();
+        
+        if(StringUtils.isNotEmpty(dbName)){
+            sbSql.append("USE ").append(dbName).append("\n");
+        }
+        sbSql.append("SELECT MAX(Visit_Id) as lastId FROM ord_Visit");
+        
+        PreparedStatement preparedStatement = this.connection.prepareStatement(sbSql.toString(),
+                TYPE_SCROLL_INSENSITIVE, CONCUR_READ_ONLY);
+        ResultSet rs = preparedStatement.executeQuery();
+        int lastId = 0;
+        while(rs.next()){
+            lastId = rs.getInt("lastId");
+        }
+        return lastId;
+    }
+    
+    /*
+     * We dont pick the last visit, since the assumption is that the data clerk 
+     * is still putting in the data, thus the record is incomplete until we get
+     * to the next visit.
+     * Currently this is the only sure way of ensuring we pick a complete visit.
+     */
     public List<Visit> getVisits(int limit, String lastVisitId, String propertyKey) throws SQLException {
         List<Visit> visits = new ArrayList<>();
         int finalVisitId = 0;
@@ -77,8 +101,11 @@ public class VisitDao {
             if (rs.isLast()) {
                 finalVisitId = visit.getVisitId();
             }
+            if(visit.getVisitId() == lastVisitId()){
+                visits.remove(visit);
+                break;
+            }
         }
-        
         updateLastId(finalVisitId, propertyKey);
 
         return visits;
