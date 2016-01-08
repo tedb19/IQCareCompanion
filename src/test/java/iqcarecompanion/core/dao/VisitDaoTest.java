@@ -55,7 +55,7 @@ public class VisitDaoTest extends AbstractDaoTest{
     @Test 
     public void GetVisits_ValidParams_VisitsReturned() throws Exception {
         List<Visit> visits = dao.getVisits(100, "0", "");
-        assertThat(visits.size(), is(3));
+        assertThat(visits.size(), is(2));
     }
     
     @Test 
